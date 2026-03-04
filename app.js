@@ -1,196 +1,234 @@
 (() => {
   "use strict";
 
-  /**
-   * Configuración principal y constantes de categorías.
-   * Estructura lista para conectar con Firebase en el futuro mediante DataProvider.
-   */
-  const STORAGE_KEY = "operativaVG.crmData.v1";
+  const STORAGE_KEY = "masterson.crmData.v2";
   const CATEGORIES = [
-    "Nuevos Servicios",
-    "Novaciones",
-    "Agregados",
-    "Movimientos de Obra",
-    "Bajas de Servicios",
+    "Movimiento de Obra",
+    "Baja de Servicios",
     "Presupuestos",
     "Charlas Informativas",
     "Facturación de Agregados",
     "Facturación de Nuevos Servicios"
   ];
 
+  const SELLERS = ["Gonzalo", "Nicolás", "Gastón"];
+
   const CATEGORY_FIELDS = {
-    "Nuevos Servicios": ["tipoServicio", "plazoImplementacion", "origenLead"],
-    "Novaciones": ["tipoNovacion", "vigenciaAnterior", "vigenciaNueva"],
-    "Agregados": ["servicioBase", "tipoAgregado", "impactoMensual"],
-    "Movimientos de Obra": ["faseObra", "responsableTecnico", "fechaEntrega"],
-    "Bajas de Servicios": ["motivoBaja", "competencia", "fechaBajaEfectiva"],
-    "Presupuestos": ["nroPresupuesto", "validezDias", "probabilidadCierre"],
-    "Charlas Informativas": ["tipoCharla", "asistentes", "seguimientoComercial"],
-    "Facturación de Agregados": ["nroFactura", "fechaFacturacion", "estadoCobranza"],
-    "Facturación de Nuevos Servicios": ["nroFacturaAlta", "periodoFacturado", "estadoCobranzaAlta"]
+    "Movimiento de Obra": [
+      { key: "timestamp", label: "Marca temporal", type: "datetime-local" },
+      { key: "entryDate", label: "Fecha de ingreso", type: "date" },
+      { key: "requesterName", label: "Solicitante (nombre)", type: "text" },
+      { key: "requesterPhone", label: "Solicitante (teléfono)", type: "text" },
+      { key: "zeroCostReason", label: "Motivo costo 0", type: "text" },
+      { key: "movementReason", label: "Motivo del movimiento", type: "text" },
+      { key: "requestChannel", label: "Medio de solicitud", type: "text" },
+      { key: "alarmType", label: "Tipo de alarma", type: "text" }
+    ],
+    "Baja de Servicios": [
+      { key: "timestamp", label: "Marca temporal", type: "datetime-local" },
+      { key: "entryDate", label: "Fecha de ingreso", type: "date" },
+      { key: "cancelRequester", label: "Cliente/persona solicita baja", type: "text" },
+      { key: "cancelReason", label: "Motivo de baja", type: "text" },
+      { key: "internetProvider", label: "Internet utilizado", type: "text" },
+      { key: "equipmentOwner", label: "Propietario equipamiento", type: "text" },
+      { key: "equipmentToRemove", label: "Equipamiento a retirar", type: "text" }
+    ],
+    "Presupuestos": [
+      { key: "budgetReason", label: "Motivo", type: "text" },
+      { key: "requiredEquipment", label: "Equipamiento necesario", type: "text" }
+    ],
+    "Charlas Informativas": [
+      { key: "meetingDate", label: "Fecha reunión", type: "date" },
+      { key: "meetingTime", label: "Hora", type: "time" },
+      { key: "meetingPlace", label: "Lugar", type: "text" },
+      { key: "meetingContact", label: "Contacto responsable", type: "text" }
+    ],
+    "Facturación de Agregados": [
+      { key: "entryDate", label: "Fecha de ingreso", type: "date" },
+      { key: "additionalDetail", label: "Detalle adicional", type: "text" },
+      { key: "serviceStartDate", label: "Fecha de alta", type: "date" }
+    ],
+    "Facturación de Nuevos Servicios": [
+      { key: "entryDate", label: "Fecha de ingreso", type: "date" },
+      { key: "mail", label: "Mail", type: "email" },
+      { key: "rut", label: "RUT", type: "text" },
+      { key: "companyName", label: "Razón social", type: "text" },
+      { key: "monthlyAmount", label: "Importe mensual", type: "number" },
+      { key: "leaseAmount", label: "Importe arrendamiento", type: "number" },
+      { key: "equipmentPurchased", label: "Equipamiento comprado", type: "text" },
+      { key: "negotiatedDiscount", label: "Descuentos negociados", type: "text" },
+      { key: "serviceStartDate", label: "Fecha de alta", type: "date" }
+    ]
   };
 
   const state = {
-    data: { version: 1, records: [] },
-    ui: {
-      view: "dashboard",
-      search: "",
-      categoryFilter: "all",
-      recordFilter: "all",
-      deleteCandidateId: null
-    },
+    data: { version: 2, records: [] },
+    ui: { view: "dashboard", search: "", categoryFilter: "all", recordFilter: "all", deleteCandidateId: null },
     charts: {}
   };
 
-  const $ = (sel, root = document) => root.querySelector(sel);
-  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const uid = () => `${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
-  const money = (v, currency = "ARS") =>
-    new Intl.NumberFormat("es-AR", { style: "currency", currency, maximumFractionDigits: 0 }).format(Number(v || 0));
+  const money = (v, currency = "ARS") => new Intl.NumberFormat("es-AR", { style: "currency", currency, maximumFractionDigits: 0 }).format(Number(v || 0));
 
-  function loadData() {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    try {
-      const parsed = JSON.parse(raw);
-      if (parsed && Array.isArray(parsed.records)) state.data = parsed;
-    } catch {
-      console.warn("No se pudo cargar almacenamiento local");
-    }
-  }
+  const DataProvider = {
+    load() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return { version: 2, records: [] };
+      try {
+        const parsed = JSON.parse(raw);
+        return parsed?.records ? parsed : { version: 2, records: [] };
+      } catch {
+        return { version: 2, records: [] };
+      }
+    },
+    save(payload) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    },
+    // Futuro Firebase:
+    // async load() => desde Firestore/Realtime DB
+    // async save() => persistir snapshot o write batches
+  };
 
-  function saveData() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
-  }
+  function renderSelects() {
+    const global = $("#globalCategoryFilter");
+    const byRecord = $("#recordCategoryFilter");
+    const byForm = $("#category");
 
-  function renderCategoryOptions() {
-    const categorySelects = [$("#category"), $("#recordCategoryFilter"), $("#globalCategoryFilter")];
-    categorySelects.forEach((select, idx) => {
-      const includeAll = idx > 0;
-      select.innerHTML = includeAll ? `<option value="all">Todas</option>` : "";
-      CATEGORIES.forEach((cat) => {
+    global.innerHTML = `<option value="all">Todas las categorías</option>`;
+    byRecord.innerHTML = `<option value="all">Todas las categorías</option>`;
+    byForm.innerHTML = "";
+
+    CATEGORIES.forEach((c) => {
+      [global, byRecord, byForm].forEach((sel, idx) => {
         const opt = document.createElement("option");
-        opt.value = cat;
-        opt.textContent = cat;
-        select.append(opt);
+        opt.value = c;
+        opt.textContent = c;
+        if (idx === 2 || idx < 2) sel.append(opt);
       });
     });
-    $("#category").value = CATEGORIES[0];
+
+    const seller = $("#seller");
+    seller.innerHTML = "";
+    SELLERS.forEach((name) => {
+      const opt = document.createElement("option");
+      opt.value = name;
+      opt.textContent = name;
+      seller.append(opt);
+    });
+
+    byForm.value = CATEGORIES[0];
     renderDynamicFields(CATEGORIES[0]);
   }
 
   function renderDynamicFields(category, values = {}) {
-    const container = $("#dynamicFields");
-    const template = $("#dynamicFieldTemplate");
-    const fields = CATEGORY_FIELDS[category] || [];
-    container.innerHTML = "";
+    const holder = $("#dynamicFields");
+    const tpl = $("#dynamicFieldTemplate");
+    holder.innerHTML = "";
 
-    fields.forEach((name) => {
-      const node = template.content.firstElementChild.cloneNode(true);
+    (CATEGORY_FIELDS[category] || []).forEach((field) => {
+      const node = tpl.content.firstElementChild.cloneNode(true);
       const label = node.querySelector("label");
       const input = node.querySelector("input");
-      const id = `extra_${name}`;
-
-      label.textContent = prettifyField(name);
+      const id = `extra_${field.key}`;
+      label.textContent = field.label;
       label.htmlFor = id;
       input.id = id;
-      input.name = `extra.${name}`;
-      input.value = values[name] || "";
-      node.classList.add("field");
-      container.append(node);
+      input.name = `extra.${field.key}`;
+      input.type = field.type || "text";
+      input.value = values[field.key] || "";
+      holder.append(node);
     });
   }
 
-  function prettifyField(name) {
-    return name
-      .replace(/([A-Z])/g, " $1")
-      .replace(/^./, (m) => m.toUpperCase())
-      .trim();
-  }
-
-  function getFilteredRecords() {
+  function getRecords() {
     const { search, categoryFilter, recordFilter } = state.ui;
     return state.data.records.filter((r) => {
-      const source = [r.serviceName, r.seller, r.client, r.address, r.observations, r.category].join(" ").toLowerCase();
+      const source = [r.serviceName, r.client, r.contact, r.address, r.category, r.seller, r.serviceType, r.observations].join(" ").toLowerCase();
       const bySearch = !search || source.includes(search.toLowerCase());
-      const byTopFilter = categoryFilter === "all" || r.category === categoryFilter;
-      const byRecordFilter = recordFilter === "all" || r.category === recordFilter;
-      return bySearch && byTopFilter && byRecordFilter;
+      const byGlobalCat = categoryFilter === "all" || r.category === categoryFilter;
+      const byRecordCat = recordFilter === "all" || r.category === recordFilter;
+      return bySearch && byGlobalCat && byRecordCat;
     });
   }
 
   function renderTable() {
     const tbody = $("#recordsTable tbody");
-    const rows = getFilteredRecords()
-      .sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate))
-      .map((r) => {
-        return `
-          <tr>
-            <td>${r.eventDate || "-"}</td>
-            <td>${r.category}</td>
-            <td>${r.serviceName}</td>
-            <td>${r.seller}</td>
-            <td>${r.client}</td>
-            <td>${r.status}</td>
-            <td>${money(r.amount, r.currency)}</td>
-            <td>
-              <div class="table-actions">
-                <button class="icon-btn" data-action="edit" data-id="${r.id}">✏️</button>
-                <button class="icon-btn" data-action="delete" data-id="${r.id}">🗑️</button>
-              </div>
-            </td>
-          </tr>
-        `;
-      })
-      .join("");
-    tbody.innerHTML = rows || `<tr><td colspan="8">Sin resultados.</td></tr>`;
+    const rows = getRecords().sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
+    tbody.innerHTML = rows.map((r) => `
+      <tr>
+        <td>${r.eventDate || "-"}</td>
+        <td>${r.category}</td>
+        <td>${r.serviceName}</td>
+        <td>${r.serviceType}</td>
+        <td>${r.seller}</td>
+        <td>${r.client}</td>
+        <td>${r.status}</td>
+        <td>${money(r.amount, r.currency)}</td>
+        <td>
+          <div class="table-actions">
+            <button class="icon-btn" data-action="edit" data-id="${r.id}">✏️</button>
+            <button class="icon-btn" data-action="delete" data-id="${r.id}">🗑️</button>
+          </div>
+        </td>
+      </tr>
+    `).join("") || `<tr><td colspan="9">Sin registros.</td></tr>`;
+  }
+
+  function metrics(rows) {
+    const sold = rows.filter((r) => r.status !== "Perdido");
+    return {
+      totalServices: rows.length,
+      newServices: rows.filter((r) => r.category === "Facturación de Nuevos Servicios").length,
+      lostServices: rows.filter((r) => r.category === "Baja de Servicios" || r.status === "Perdido").length,
+      totalRevenue: sold.reduce((acc, r) => acc + Number(r.amount || 0), 0),
+      activeWorks: rows.filter((r) => r.category === "Movimiento de Obra" && ["Pendiente", "En Curso"].includes(r.status)).length,
+      soldAddons: rows.filter((r) => r.category === "Facturación de Agregados" && r.status !== "Perdido").length
+    };
   }
 
   function renderKpis() {
-    const rows = getFilteredRecords();
-    const total = rows.length;
-    const newServices = rows.filter((r) => r.category === "Nuevos Servicios").length;
-    const lost = rows.filter((r) => r.status === "Perdido").length;
-    const revenue = rows.filter((r) => r.status !== "Perdido").reduce((acc, r) => acc + Number(r.amount || 0), 0);
-
-    $("#kpiTotalServices").textContent = total;
-    $("#kpiNewServices").textContent = newServices;
-    $("#kpiLostServices").textContent = lost;
-    $("#kpiRevenue").textContent = money(revenue);
+    const m = metrics(getRecords());
+    $("#kpiTotalServices").textContent = m.totalServices;
+    $("#kpiNewServices").textContent = m.newServices;
+    $("#kpiLostServices").textContent = m.lostServices;
+    $("#kpiRevenue").textContent = money(m.totalRevenue);
+    $("#kpiActiveWorks").textContent = m.activeWorks;
+    $("#kpiAddons").textContent = m.soldAddons;
   }
 
   function renderRankings() {
-    const rows = getFilteredRecords();
-    const salesBySeller = new Map();
-    const lostBySeller = new Map();
+    const rows = getRecords();
+    const soldRows = rows.filter((r) => r.status !== "Perdido");
+
+    const salesMap = new Map();
+    const lostMap = new Map();
     const bestBySeller = new Map();
+    const billingByService = new Map();
 
     rows.forEach((r) => {
       const amount = Number(r.amount || 0);
       if (r.status !== "Perdido") {
-        salesBySeller.set(r.seller, (salesBySeller.get(r.seller) || 0) + amount);
-        const currentBest = bestBySeller.get(r.seller);
-        if (!currentBest || amount > currentBest.amount) bestBySeller.set(r.seller, r);
+        salesMap.set(r.seller, (salesMap.get(r.seller) || 0) + amount);
+        billingByService.set(r.serviceName, (billingByService.get(r.serviceName) || 0) + amount);
+        const current = bestBySeller.get(r.seller);
+        if (!current || amount > current.amount) bestBySeller.set(r.seller, r);
       } else {
-        lostBySeller.set(r.seller, (lostBySeller.get(r.seller) || 0) + 1);
+        lostMap.set(r.seller, (lostMap.get(r.seller) || 0) + 1);
       }
     });
 
-    const sortedSales = [...salesBySeller.entries()].sort((a, b) => b[1] - a[1]);
-    const sortedLost = [...lostBySeller.entries()].sort((a, b) => b[1] - a[1]);
-    const topGeneral = rows
-      .filter((r) => r.status !== "Perdido")
-      .sort((a, b) => Number(b.amount) - Number(a.amount))
-      .slice(0, 5);
+    const salesRank = [...salesMap.entries()].sort((a, b) => b[1] - a[1]);
+    const lostRank = [...lostMap.entries()].sort((a, b) => b[1] - a[1]);
+    const topGeneral = [...soldRows].sort((a, b) => b.amount - a.amount).slice(0, 5);
+    const topServices = [...billingByService.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
 
-    $("#rankingSales").innerHTML = sortedSales.map(([seller, total]) => `<li>${seller}: ${money(total)}</li>`).join("") || "<li>Sin datos.</li>";
-    $("#rankingLost").innerHTML = sortedLost.map(([seller, qty]) => `<li>${seller}: ${qty} perdidos</li>`).join("") || "<li>Sin datos.</li>";
-    $("#bestSaleBySeller").innerHTML = [...bestBySeller.entries()]
-      .map(([seller, rec]) => `<li>${seller}: ${rec.serviceName} (${money(rec.amount, rec.currency)})</li>`)
-      .join("") || "<li>Sin datos.</li>";
-    $("#topGeneral").innerHTML = topGeneral
-      .map((r) => `<li>${r.serviceName} · ${r.seller} · ${money(r.amount, r.currency)}</li>`)
-      .join("") || "<li>Sin datos.</li>";
+    $("#rankingSales").innerHTML = salesRank.map(([s, v]) => `<li>${s}: ${money(v)}</li>`).join("") || "<li>Sin datos.</li>";
+    $("#rankingLost").innerHTML = lostRank.map(([s, q]) => `<li>${s}: ${q} perdidos</li>`).join("") || "<li>Sin datos.</li>";
+    $("#bestSaleBySeller").innerHTML = [...bestBySeller.entries()].map(([s, r]) => `<li>${s}: ${r.serviceName} (${money(r.amount, r.currency)})</li>`).join("") || "<li>Sin datos.</li>";
+    $("#topGeneral").innerHTML = topGeneral.map((r) => `<li>${r.serviceName} · ${r.seller} · ${money(r.amount, r.currency)}</li>`).join("") || "<li>Sin datos.</li>";
+    $("#topBillingServices").innerHTML = topServices.map(([name, total]) => `<li>${name}: ${money(total)}</li>`).join("") || "<li>Sin datos.</li>";
   }
 
   function monthlySeries(rows) {
@@ -203,32 +241,7 @@
     return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   }
 
-  function renderCharts() {
-    const rows = getFilteredRecords();
-    const salesByCategory = CATEGORIES.map((cat) =>
-      rows.filter((r) => r.category === cat && r.status !== "Perdido").reduce((acc, r) => acc + Number(r.amount || 0), 0)
-    );
-    const statusNames = ["Pendiente", "En Curso", "Ganado", "Perdido", "Facturado"];
-    const statusData = statusNames.map((status) => rows.filter((r) => r.status === status).length);
-    const monthData = monthlySeries(rows);
-
-    createOrUpdateChart("chartCategory", "bar", {
-      labels: CATEGORIES,
-      datasets: [{ label: "Monto", data: salesByCategory, backgroundColor: "#0c8384" }]
-    });
-
-    createOrUpdateChart("chartMonthly", "line", {
-      labels: monthData.map(([k]) => k),
-      datasets: [{ label: "Ingresos", data: monthData.map(([, v]) => v), borderColor: "#17a2a4", tension: 0.25 }]
-    });
-
-    createOrUpdateChart("chartStatus", "doughnut", {
-      labels: statusNames,
-      datasets: [{ data: statusData, backgroundColor: ["#3b82f6", "#f59e0b", "#10b981", "#ef4444", "#8b5cf6"] }]
-    });
-  }
-
-  function createOrUpdateChart(canvasId, type, data) {
+  function chart(canvasId, type, data) {
     if (state.charts[canvasId]) state.charts[canvasId].destroy();
     state.charts[canvasId] = new Chart($("#" + canvasId), {
       type,
@@ -236,155 +249,110 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: "#e6f1f1" } } },
+        plugins: { legend: { labels: { color: "#e7f5f5" } } },
         scales: type === "doughnut" ? {} : {
-          x: { ticks: { color: "#9fb6b6" }, grid: { color: "#253638" } },
-          y: { ticks: { color: "#9fb6b6" }, grid: { color: "#253638" } }
+          x: { ticks: { color: "#9fb8b8" }, grid: { color: "#244041" } },
+          y: { ticks: { color: "#9fb8b8" }, grid: { color: "#244041" } }
         }
       }
     });
+  }
+
+  function renderCharts() {
+    const rows = getRecords();
+    const byCategory = CATEGORIES.map((cat) => rows.filter((r) => r.category === cat && r.status !== "Perdido").reduce((a, b) => a + Number(b.amount || 0), 0));
+    const statusLabels = ["Pendiente", "En Curso", "Ganado", "Perdido", "Facturado"];
+    const statusData = statusLabels.map((s) => rows.filter((r) => r.status === s).length);
+    const monthData = monthlySeries(rows);
+
+    chart("chartCategory", "bar", {
+      labels: CATEGORIES,
+      datasets: [{ label: "Monto", data: byCategory, backgroundColor: ["#0ca5a7", "#0891b2", "#14b8a6", "#22c55e", "#8b5cf6", "#f59e0b"] }]
+    });
+
+    chart("chartMonthly", "line", {
+      labels: monthData.map(([k]) => k),
+      datasets: [{ label: "Ingresos", data: monthData.map(([, v]) => v), borderColor: "#0ca5a7", tension: .25 }]
+    });
+
+    chart("chartStatus", "doughnut", {
+      labels: statusLabels,
+      datasets: [{ data: statusData, backgroundColor: ["#3b82f6", "#f59e0b", "#10b981", "#ef4444", "#8b5cf6"] }]
+    });
+  }
+
+  function showView(name) {
+    state.ui.view = name;
+    $$(".view").forEach((v) => v.classList.toggle("active", v.id === `view-${name}`));
+    $$('[data-view]').forEach((b) => b.classList.toggle("active", b.dataset.view === name));
+    $("#viewTitle").textContent = ({ dashboard: "Dashboard", records: "Registros", results: "Resultados", settings: "Configuración" })[name] || "Dashboard";
   }
 
   function resetForm() {
     $("#recordForm").reset();
     $("#recordId").value = "";
     $("#category").value = CATEGORIES[0];
-    renderDynamicFields(CATEGORIES[0]);
+    $("#seller").value = SELLERS[0];
     $("#eventDate").valueAsDate = new Date();
+    renderDynamicFields(CATEGORIES[0]);
   }
 
-  function serializeForm(form) {
-    const f = new FormData(form);
-    const category = f.get("category");
+  function serialize(form) {
+    const fd = new FormData(form);
+    const category = fd.get("category");
     const extra = {};
-    (CATEGORY_FIELDS[category] || []).forEach((key) => {
-      extra[key] = f.get(`extra.${key}`) || "";
-    });
+    (CATEGORY_FIELDS[category] || []).forEach((f) => { extra[f.key] = fd.get(`extra.${f.key}`) || ""; });
+
     return {
-      id: f.get("recordId") || uid(),
+      id: fd.get("recordId") || uid(),
       category,
-      serviceName: f.get("serviceName")?.trim(),
-      seller: f.get("seller")?.trim(),
-      client: f.get("client")?.trim(),
-      contact: f.get("contact")?.trim(),
-      address: f.get("address")?.trim(),
-      administration: f.get("administration")?.trim(),
-      amount: Number(f.get("amount")),
-      currency: f.get("currency"),
-      status: f.get("status"),
-      eventDate: f.get("eventDate"),
-      observations: f.get("observations")?.trim(),
+      serviceName: String(fd.get("serviceName") || "").trim(),
+      serviceType: String(fd.get("serviceType") || "").trim(),
+      seller: String(fd.get("seller") || "").trim(),
+      client: String(fd.get("client") || "").trim(),
+      contact: String(fd.get("contact") || "").trim(),
+      address: String(fd.get("address") || "").trim(),
+      administration: String(fd.get("administration") || "").trim(),
+      amount: Number(fd.get("amount")),
+      currency: fd.get("currency"),
+      status: fd.get("status"),
+      eventDate: fd.get("eventDate"),
+      observations: String(fd.get("observations") || "").trim(),
       extra,
       createdAt: new Date().toISOString()
     };
   }
 
-  function validateRecord(r) {
-    if (!r.serviceName || !r.seller || !r.client || !r.contact || !r.address || !r.eventDate) {
-      return "Completa todos los campos obligatorios.";
-    }
-    if (Number.isNaN(r.amount) || r.amount < 0) return "Monto inválido.";
+  function validate(record) {
+    if (!record.serviceName || !record.seller || !record.client || !record.contact || !record.address || !record.eventDate) return "Faltan campos obligatorios.";
+    if (Number.isNaN(record.amount) || record.amount < 0) return "Monto inválido.";
     return "";
   }
 
-  function upsertRecord(record) {
+  function saveRecord(record) {
     const idx = state.data.records.findIndex((r) => r.id === record.id);
-    if (idx > -1) state.data.records[idx] = { ...state.data.records[idx], ...record };
+    if (idx >= 0) state.data.records[idx] = { ...state.data.records[idx], ...record };
     else state.data.records.push(record);
-    saveData();
-    rerenderAll();
-  }
-
-  function requestDeleteRecord(id) {
-    state.ui.deleteCandidateId = id;
-    const dialog = $("#confirmDialog");
-    dialog.showModal();
-  }
-
-  function confirmDeleteRecord() {
-    const id = state.ui.deleteCandidateId;
-    if (!id) return;
-    state.data.records = state.data.records.filter((r) => r.id !== id);
-    saveData();
-    state.ui.deleteCandidateId = null;
-    rerenderAll();
+    DataProvider.save(state.data);
+    rerender();
   }
 
   function editRecord(id) {
-    const r = state.data.records.find((row) => row.id === id);
+    const r = state.data.records.find((x) => x.id === id);
     if (!r) return;
     showView("records");
-    const map = {
-      recordId: r.id,
-      category: r.category,
-      serviceName: r.serviceName,
-      seller: r.seller,
-      client: r.client,
-      contact: r.contact,
-      address: r.address,
-      administration: r.administration,
-      amount: r.amount,
-      currency: r.currency,
-      status: r.status,
-      eventDate: r.eventDate,
-      observations: r.observations
-    };
-    Object.entries(map).forEach(([idField, value]) => {
-      const el = $("#" + idField);
-      if (el) el.value = value ?? "";
+    const fields = ["recordId", "category", "serviceName", "serviceType", "seller", "client", "contact", "address", "administration", "amount", "currency", "status", "eventDate", "observations"];
+    fields.forEach((f) => {
+      const el = $("#" + f);
+      if (el) el.value = r[f] ?? "";
     });
     renderDynamicFields(r.category, r.extra || {});
   }
 
-  function bindEvents() {
-    $$("[data-view]").forEach((btn) => btn.addEventListener("click", () => showView(btn.dataset.view)));
-
-    $("#category").addEventListener("change", (e) => renderDynamicFields(e.target.value));
-    $("#globalSearch").addEventListener("input", (e) => {
-      state.ui.search = e.target.value.trim();
-      rerenderAll();
-    });
-
-    $("#globalCategoryFilter").addEventListener("change", (e) => {
-      state.ui.categoryFilter = e.target.value;
-      rerenderAll();
-    });
-
-    $("#recordCategoryFilter").addEventListener("change", (e) => {
-      state.ui.recordFilter = e.target.value;
-      rerenderAll();
-    });
-
-    $("#recordsTable tbody").addEventListener("click", (e) => {
-      const target = e.target.closest("button[data-action]");
-      if (!target) return;
-      const { action, id } = target.dataset;
-      if (action === "edit") editRecord(id);
-      if (action === "delete") requestDeleteRecord(id);
-    });
-
-    $("#recordForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const record = serializeForm(e.currentTarget);
-      const error = validateRecord(record);
-      if (error) return alert(error);
-      upsertRecord(record);
-      resetForm();
-      showView("records");
-    });
-
-    $("#btnReset").addEventListener("click", resetForm);
-    $("#btnNewRecord").addEventListener("click", () => {
-      showView("records");
-      resetForm();
-    });
-
-    $("#confirmDialog").addEventListener("close", (e) => {
-      if (e.target.returnValue === "confirm") confirmDeleteRecord();
-    });
-
-    $("#btnExport").addEventListener("click", exportJson);
-    $("#importFile").addEventListener("change", importJson);
+  function deleteRecord(id) {
+    state.data.records = state.data.records.filter((r) => r.id !== id);
+    DataProvider.save(state.data);
+    rerender();
   }
 
   function exportJson() {
@@ -392,7 +360,7 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `operativa-vg-crm-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `masterson-crm-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -405,75 +373,103 @@
       try {
         const parsed = JSON.parse(String(reader.result));
         if (!parsed || !Array.isArray(parsed.records)) throw new Error("invalid");
-        state.data = { version: 1, records: parsed.records };
-        saveData();
-        rerenderAll();
-        alert("Importación exitosa.");
+        state.data = { version: 2, records: parsed.records };
+        DataProvider.save(state.data);
+        rerender();
+        alert("Importación exitosa");
       } catch {
-        alert("JSON inválido.");
+        alert("JSON inválido");
       }
     };
     reader.readAsText(file);
     e.target.value = "";
   }
 
-  function showView(viewName) {
-    state.ui.view = viewName;
-    $$(".view").forEach((v) => v.classList.toggle("active", v.id === `view-${viewName}`));
-    $$("[data-view]").forEach((b) => b.classList.toggle("active", b.dataset.view === viewName));
-    $("#viewTitle").textContent = viewName === "records" ? "Registros" : viewName === "results" ? "Resultados" : viewName === "settings" ? "Configuración" : "Dashboard";
-  }
-
-  function rerenderAll() {
+  function rerender() {
     renderTable();
     renderKpis();
     renderRankings();
     renderCharts();
   }
 
-  function seedData() {
-    if (state.data.records.length > 0) return;
+  function bindEvents() {
+    $$('[data-view]').forEach((b) => b.addEventListener("click", () => showView(b.dataset.view)));
+    $("#category").addEventListener("change", (e) => renderDynamicFields(e.target.value));
+    $("#globalSearch").addEventListener("input", (e) => { state.ui.search = e.target.value.trim(); rerender(); });
+    $("#globalCategoryFilter").addEventListener("change", (e) => { state.ui.categoryFilter = e.target.value; rerender(); });
+    $("#recordCategoryFilter").addEventListener("change", (e) => { state.ui.recordFilter = e.target.value; rerender(); });
+
+    $("#recordForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const record = serialize(e.currentTarget);
+      const err = validate(record);
+      if (err) return alert(err);
+      saveRecord(record);
+      resetForm();
+      showView("records");
+    });
+
+    $("#btnReset").addEventListener("click", resetForm);
+    $("#btnNewRecord").addEventListener("click", () => { showView("records"); resetForm(); });
+
+    $("#recordsTable tbody").addEventListener("click", (e) => {
+      const target = e.target.closest("button[data-action]");
+      if (!target) return;
+      const { action, id } = target.dataset;
+      if (action === "edit") editRecord(id);
+      if (action === "delete") {
+        state.ui.deleteCandidateId = id;
+        $("#confirmDialog").showModal();
+      }
+    });
+
+    $("#confirmDialog").addEventListener("close", (e) => {
+      if (e.target.returnValue === "confirm" && state.ui.deleteCandidateId) {
+        deleteRecord(state.ui.deleteCandidateId);
+        state.ui.deleteCandidateId = null;
+      }
+    });
+
+    $("#btnExport").addEventListener("click", exportJson);
+    $("#importFile").addEventListener("change", importJson);
+  }
+
+  function seed() {
+    if (state.data.records.length) return;
+    const now = Date.now();
     const demo = [
-      ["Nuevos Servicios", "Instalación Fibra 300MB", "Lucía Pérez", "Consorcio Norte", "Ganado", 320000],
-      ["Agregados", "IP Fija Empresarial", "Martín Rojas", "Logística Sur", "Facturado", 90000],
-      ["Presupuestos", "Enlace Dedicado", "Lucía Pérez", "Hospital Central", "Pendiente", 540000],
-      ["Bajas de Servicios", "Baja Telefonía", "Pedro Vera", "Retail Centro", "Perdido", 120000],
-      ["Novaciones", "Renovación contrato anual", "Marina Sol", "Colegio Federal", "Ganado", 210000]
+      { category: "Facturación de Nuevos Servicios", serviceName: "PV Torre Central", serviceType: "Portería virtual", seller: "Gonzalo", client: "Consorcio Torre Central", status: "Facturado", amount: 380000 },
+      { category: "Facturación de Agregados", serviceName: "Agregado CCTV Norte", serviceType: "Instalación de cámaras", seller: "Nicolás", client: "Edificio Norte", status: "Ganado", amount: 155000 },
+      { category: "Movimiento de Obra", serviceName: "Recableado Obra Sur", serviceType: "Sistemas de alarma", seller: "Gastón", client: "Constructora Sur", status: "En Curso", amount: 92000 },
+      { category: "Baja de Servicios", serviceName: "Baja Monitoreo Plaza", serviceType: "Monitoreo", seller: "Nicolás", client: "Plaza Offices", status: "Perdido", amount: 120000 },
+      { category: "Presupuestos", serviceName: "Propuesta Control Acceso", serviceType: "Control de acceso", seller: "Gonzalo", client: "Residencial Delta", status: "Pendiente", amount: 275000 },
+      { category: "Charlas Informativas", serviceName: "Charla Administración Río", serviceType: "Portería virtual", seller: "Gastón", client: "Adm. Río", status: "En Curso", amount: 50000 }
     ];
 
-    state.data.records = demo.map(([category, serviceName, seller, client, status, amount], i) => ({
+    state.data.records = demo.map((d, i) => ({
       id: uid(),
-      category,
-      serviceName,
-      seller,
-      client,
+      ...d,
       contact: "contacto@cliente.com",
-      address: "Av. Principal 123",
-      administration: "Administración central",
-      amount,
+      address: "Av. Comercial 123",
+      administration: "Administración General",
       currency: "ARS",
-      status,
-      eventDate: new Date(Date.now() - i * 86400000 * 15).toISOString().slice(0, 10),
-      observations: "Registro de ejemplo",
+      eventDate: new Date(now - i * 1000 * 60 * 60 * 24 * 12).toISOString().slice(0, 10),
+      observations: "Registro inicial de ejemplo",
       extra: {},
       createdAt: new Date().toISOString()
     }));
-    saveData();
+
+    DataProvider.save(state.data);
   }
 
   function init() {
-    renderCategoryOptions();
-    loadData();
-    seedData();
+    renderSelects();
+    state.data = DataProvider.load();
+    seed();
     bindEvents();
     resetForm();
-    rerenderAll();
+    rerender();
     showView("dashboard");
-
-    // Roadmap Firebase:
-    // 1) Reemplazar loadData/saveData por adaptador Firestore.
-    // 2) Integrar autenticación Firebase Auth (email/password y Google).
-    // 3) Agregar notificaciones (Cloud Messaging) y auditoría por usuario.
   }
 
   init();
