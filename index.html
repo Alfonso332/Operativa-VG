@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MASTERSON | CRM Comercial & Operativo</title>
+  <meta name="description" content="CRM comercial y operativo para servicios de seguridad y portería virtual." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="bg-fx" aria-hidden="true"></div>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <div class="brand">
+        <div class="brand__logo">M</div>
+        <div>
+          <h1>MASTERSON</h1>
+          <small>CRM Comercial & Operativo</small>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <button class="menu__item active" data-view="dashboard">Dashboard</button>
+        <button class="menu__item" data-view="records">Registros</button>
+        <button class="menu__item" data-view="results">Resultados</button>
+        <button class="menu__item" data-view="settings">Configuración</button>
+      </nav>
+
+      <section class="seller-box">
+        <h4>Equipo Comercial</h4>
+        <ul>
+          <li>Gonzalo</li>
+          <li>Nicolás</li>
+          <li>Gastón</li>
+        </ul>
+      </section>
+
+      <div class="sidebar__footer">
+        <p>DataProvider: localStorage</p>
+        <span class="badge">Firebase Ready</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar glass">
+        <div>
+          <h2 id="viewTitle">Dashboard</h2>
+          <p class="muted">Seguridad, portería virtual, monitoreo y control de acceso.</p>
+        </div>
+        <div class="topbar__actions">
+          <label class="search">
+            <span>🔎</span>
+            <input type="search" id="globalSearch" placeholder="Buscar cliente, dirección, servicio..." />
+          </label>
+          <select id="globalCategoryFilter" aria-label="Filtrar por categoría"></select>
+          <button id="btnExport" class="btn btn--ghost">Exportar JSON</button>
+          <label class="btn btn--ghost" for="importFile">Importar JSON</label>
+          <input id="importFile" type="file" accept="application/json" hidden />
+        </div>
+      </header>
+
+      <section class="view active" id="view-dashboard">
+        <div class="kpi-grid">
+          <article class="kpi-card glass"><p>Servicios Totales</p><h3 id="kpiTotalServices">0</h3></article>
+          <article class="kpi-card glass"><p>Nuevos Servicios</p><h3 id="kpiNewServices">0</h3></article>
+          <article class="kpi-card glass"><p>Servicios Perdidos</p><h3 id="kpiLostServices">0</h3></article>
+          <article class="kpi-card glass"><p>Monto Total Vendido</p><h3 id="kpiRevenue">$0</h3></article>
+          <article class="kpi-card glass"><p>Obras Activas</p><h3 id="kpiActiveWorks">0</h3></article>
+          <article class="kpi-card glass"><p>Agregados Vendidos</p><h3 id="kpiAddons">0</h3></article>
+        </div>
+
+        <div class="panel-grid">
+          <article class="panel glass">
+            <header><h3>Ventas por Módulo</h3></header>
+            <canvas id="chartCategory"></canvas>
+          </article>
+          <article class="panel glass">
+            <header><h3>Evolución Mensual</h3></header>
+            <canvas id="chartMonthly"></canvas>
+          </article>
+          <article class="panel glass panel--wide">
+            <header><h3>Distribución por Estado</h3></header>
+            <canvas id="chartStatus"></canvas>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-records">
+        <div class="toolbar">
+          <h3>Gestión Unificada de Registros</h3>
+          <div class="toolbar__actions">
+            <select id="recordCategoryFilter" aria-label="Filtrar registros por categoría"></select>
+            <button id="btnNewRecord" class="btn">Nuevo Registro</button>
+          </div>
+        </div>
+
+        <article class="panel glass">
+          <header>
+            <h4>Formulario Comercial / Operativo</h4>
+            <p class="muted">Campos base + campos específicos por cada hoja de cálculo.</p>
+          </header>
+
+          <form id="recordForm" class="form-grid" novalidate>
+            <div class="field">
+              <label for="category">Módulo</label>
+              <select id="category" name="category" required></select>
+            </div>
+            <div class="field">
+              <label for="serviceName">Nombre del servicio</label>
+              <input id="serviceName" name="serviceName" required />
+            </div>
+            <div class="field">
+              <label for="serviceType">Tipo de servicio</label>
+              <select id="serviceType" name="serviceType" required>
+                <option value="Portería virtual">Portería virtual</option>
+                <option value="Monitoreo">Monitoreo</option>
+                <option value="Control de acceso">Control de acceso</option>
+                <option value="Instalación de cámaras">Instalación de cámaras</option>
+                <option value="Sistemas de alarma">Sistemas de alarma</option>
+                <option value="Perifoneo">Perifoneo</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="seller">Vendedor / Representante</label>
+              <select id="seller" name="seller" required>
+                <option>Gonzalo</option>
+                <option>Nicolás</option>
+                <option>Gastón</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="client">Cliente</label>
+              <input id="client" name="client" required />
+            </div>
+            <div class="field">
+              <label for="contact">Contacto</label>
+              <input id="contact" name="contact" required />
+            </div>
+            <div class="field field--span-2">
+              <label for="address">Dirección</label>
+              <input id="address" name="address" required />
+            </div>
+            <div class="field">
+              <label for="administration">Administración</label>
+              <input id="administration" name="administration" />
+            </div>
+            <div class="field">
+              <label for="status">Estado</label>
+              <select id="status" name="status" required>
+                <option value="Pendiente">Pendiente</option>
+                <option value="En Curso">En Curso</option>
+                <option value="Ganado">Ganado</option>
+                <option value="Perdido">Perdido</option>
+                <option value="Facturado">Facturado</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="amount">Monto</label>
+              <input id="amount" name="amount" type="number" step="0.01" min="0" required />
+            </div>
+            <div class="field">
+              <label for="currency">Moneda</label>
+              <select id="currency" name="currency" required>
+                <option value="ARS">ARS</option>
+                <option value="USD">USD</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="eventDate">Fecha principal</label>
+              <input id="eventDate" name="eventDate" type="date" required />
+            </div>
+            <div class="field field--span-3">
+              <label for="observations">Observaciones</label>
+              <textarea id="observations" name="observations" rows="3"></textarea>
+            </div>
+
+            <fieldset class="fieldset field--span-3">
+              <legend>Campos específicos de la hoja seleccionada</legend>
+              <div class="dynamic-fields" id="dynamicFields"></div>
+            </fieldset>
+
+            <div class="form-actions field--span-3">
+              <input type="hidden" id="recordId" name="recordId" />
+              <button type="submit" class="btn">Guardar</button>
+              <button type="reset" class="btn btn--ghost" id="btnReset">Limpiar</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="panel glass">
+          <header>
+            <h4>Registros</h4>
+            <p class="muted">CRUD completo con búsqueda y filtros globales.</p>
+          </header>
+          <div class="table-wrap">
+            <table id="recordsTable">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Módulo</th>
+                  <th>Servicio</th>
+                  <th>Tipo</th>
+                  <th>Vendedor</th>
+                  <th>Cliente</th>
+                  <th>Estado</th>
+                  <th>Monto</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="view" id="view-results">
+        <div class="panel-grid panel-grid--results">
+          <article class="panel glass"><header><h4>Ranking por Monto Vendido</h4></header><ol id="rankingSales" class="ranking-list"></ol></article>
+          <article class="panel glass"><header><h4>Ranking Servicios Perdidos</h4></header><ol id="rankingLost" class="ranking-list"></ol></article>
+          <article class="panel glass"><header><h4>Mayor Venta por Vendedor</h4></header><ul id="bestSaleBySeller" class="ranking-list"></ul></article>
+          <article class="panel glass"><header><h4>Top General de Ventas</h4></header><ul id="topGeneral" class="ranking-list"></ul></article>
+          <article class="panel glass panel--wide"><header><h4>Servicios con Mayor Facturación</h4></header><ul id="topBillingServices" class="ranking-list"></ul></article>
+        </div>
+      </section>
+
+      <section class="view" id="view-settings">
+        <article class="panel glass">
+          <header><h3>Arquitectura y Evolución Firebase</h3></header>
+          <ul class="settings-list">
+            <li>Data model versionado para localStorage.</li>
+            <li>Export/import JSON para backup y migración.</li>
+            <li>Adaptador `DataProvider` preparado para Firestore/Realtime DB.</li>
+            <li>Roadmap: Auth, roles (comercial/admin/operaciones), notificaciones.</li>
+          </ul>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Navegación móvil">
+    <button class="bottom-nav__item active" data-view="dashboard">Dashboard</button>
+    <button class="bottom-nav__item" data-view="records">Registros</button>
+    <button class="bottom-nav__item" data-view="results">Resultados</button>
+    <button class="bottom-nav__item" data-view="settings">Ajustes</button>
+  </nav>
+
+  <dialog id="confirmDialog">
+    <form method="dialog" class="dialog-box">
+      <h4>¿Eliminar registro?</h4>
+      <p>Esta acción no se puede deshacer.</p>
+      <menu>
+        <button value="cancel" class="btn btn--ghost">Cancelar</button>
+        <button value="confirm" class="btn btn--danger">Eliminar</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <template id="dynamicFieldTemplate">
+    <div class="field">
+      <label></label>
+      <input />
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
