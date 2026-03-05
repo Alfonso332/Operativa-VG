@@ -3,250 +3,245 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#006465" />
-    <title>Operativa VG</title>
+    <meta name="theme-color" content="#0b1e35" />
+    <title>MASTERSON Security App</title>
     <style>
       :root {
-        --bg: #f2f5fb;
-        --card: #ffffff;
-        --text: #102333;
-        --muted: #54667a;
-        --primary: #006465;
-        --primary-soft: #d8efed;
-        --radius: 18px;
-        --shadow: 0 14px 38px rgba(17, 24, 39, 0.08);
+        --bg: #081326;
+        --bg-soft: #102846;
+        --card: rgba(255, 255, 255, 0.08);
+        --line: rgba(138, 191, 255, 0.25);
+        --text: #eaf3ff;
+        --muted: #a9c3e5;
+        --primary: #12b3ff;
+        --ok: #2dd4bf;
+        --warn: #f59e0b;
+        --danger: #f43f5e;
       }
+
       * { box-sizing: border-box; }
-      body { margin: 0; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text); background: radial-gradient(circle at top, #dff1ef 0, var(--bg) 48%); }
-      .app-shell { min-height: 100dvh; max-width: 1200px; margin: 0 auto; padding: 1rem; }
-      .topbar { display: flex; justify-content: space-between; align-items: center; gap: .8rem; }
-      .topbar h1 { margin: .2rem 0 0; font-size: clamp(1.2rem, 2.4vw, 1.9rem); }
-      .eyebrow { margin: 0; color: var(--muted); font-size: .85rem; }
-      .icon-btn { border: none; background: var(--card); border-radius: 14px; width: 44px; height: 44px; box-shadow: var(--shadow); cursor: pointer; }
-      .content { margin-top: 1rem; }
-      .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); }
-      .hero-card { padding: 1rem; display: flex; gap: .75rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-      .hero-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
-      .btn { border: none; border-radius: 12px; padding: .7rem .95rem; font-weight: 600; cursor: pointer; }
-      .btn-primary { background: var(--primary); color: #fff; }
-      .btn-soft { background: var(--primary-soft); color: #044443; }
-      .metrics-grid { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); margin-top: 1rem; }
-      .metric-card { padding: .95rem; }
-      .metric-card h3 { margin: 0; font-size: .85rem; color: var(--muted); }
-      .metric-card strong { display: block; margin-top: .35rem; font-size: 1.35rem; }
-      .metric-card span { color: var(--muted); font-size: .82rem; }
-      .section-title { margin: 0 0 .7rem; font-size: 1rem; }
-      .panel { padding: 1rem; }
-      .windows { position: relative; min-height: 60vh; }
-      .app-window { display: none; animation: fade .25s ease; }
-      .app-window.active { display: block; }
-      @keyframes fade { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: translateY(0);} }
-      .top-sellers,.seller-list,.service-list,.news-list { display: grid; gap: .55rem; }
-      .top-item,.service-item,.news-item,.seller-item { border: 1px solid #e7ebf5; border-radius: 12px; padding: .7rem; background: #fafcff; }
-      .top-item { display:flex; justify-content:space-between; }
-      .seller-head { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .4rem; border: none; background: none; width: 100%; text-align: left; cursor: pointer; padding: 0; }
-      .seller-item h4 { margin: 0; }
-      .seller-item small,.news-item small { color: var(--muted); }
-      .chip { font-size: .76rem; padding: .22rem .46rem; border-radius: 999px; font-weight: 600; }
-      .chip-ok { color: #05543a; background: #d8f7e8; }
-      .chip-warn { color: #7b4a00; background: #ffe9ca; }
-      .seller-detail { margin-top: .6rem; border-top: 1px solid #e8edf6; padding-top: .6rem; }
-      .kpi-mini-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .45rem; }
-      .kpi-mini { background: #f8faff; border-radius: 10px; padding: .5rem; }
-      .kpi-mini span { color: var(--muted); font-size: .73rem; }
-      .form-stack { display: grid; gap: .55rem; }
-      .input,.select { width: 100%; border: 1px solid #dfe5f2; border-radius: 10px; padding: .65rem; background: #fff; }
-      .mobile-tabbar { display: none; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 10% 0%, #17406f 0%, transparent 45%),
+          radial-gradient(circle at 95% -10%, #103e57 0%, transparent 40%),
+          linear-gradient(180deg, #0b1e35 0%, var(--bg) 55%, #050b16 100%);
+      }
 
-      @media (max-width:768px) {
-        body { background: #071521; color: #eaf6ff; }
-        .app-shell {
-          max-width: 520px;
-          background:
-            radial-gradient(circle at 85% -10%, rgba(0, 161, 155, 0.35), transparent 38%),
-            radial-gradient(circle at 0% 40%, rgba(0, 100, 101, 0.26), transparent 40%),
-            linear-gradient(180deg, #0b2830 0%, #0c1e2a 35%, #071521 100%);
-          padding: calc(env(safe-area-inset-top)+.8rem) .8rem calc(env(safe-area-inset-bottom)+5.6rem);
-        }
-        .topbar h1,.section-title,.seller-item h4,.metric-card strong,.top-item strong { color: #f2fbff; }
-        .eyebrow,.metric-card h3,.metric-card span,.seller-item small,.kpi-mini span,.news-item small { color: #b9d8e8; }
-        .card,.icon-btn,.seller-item,.service-item,.news-item,.kpi-mini,.top-item {
-          background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05));
-          border: 1px solid rgba(152, 222, 235, 0.22);
-          box-shadow: 0 10px 22px rgba(2, 8, 20, 0.28), inset 0 1px 0 rgba(255,255,255,.15);
-          backdrop-filter: blur(12px);
-        }
-        .hero-card { position: relative; overflow: hidden; }
-        .hero-card::after {
-          content: "";
-          position: absolute;
-          width: 120px; height: 120px; right: -30px; top: -30px;
-          background: radial-gradient(circle, rgba(0, 214, 193, .35), transparent 70%);
-          pointer-events: none;
-        }
-        .btn-primary { box-shadow: 0 8px 18px rgba(0, 100, 101, .45); }
-        .btn-soft { background: rgba(0,100,101,.33); color: #dbf6f4; }
-        .input,.select { background: rgba(255,255,255,.06); border: 1px solid rgba(173,196,255,.3); color: #effbff; }
-        .metrics-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-        .kpi-mini-grid { grid-template-columns: repeat(2, 1fr); }
+      .app { max-width: 520px; margin: 0 auto; min-height: 100dvh; padding: calc(env(safe-area-inset-top) + 0.8rem) 0.85rem calc(env(safe-area-inset-bottom) + 5.2rem); }
+      .topbar { display: flex; justify-content: space-between; align-items: center; }
+      .brand small { color: var(--muted); }
+      .brand h1 { margin: 0.12rem 0 0; font-size: 1.25rem; letter-spacing: 0.3px; }
+      .icon-btn { width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 13px; background: var(--card); color: var(--text); }
 
-        /* Scroll vertical continuo en celular */
-        .windows { display: grid; gap: .8rem; }
-        .app-window { display: block !important; animation: none; }
+      .stack { display: grid; gap: 0.75rem; margin-top: 0.85rem; }
+      .card { border: 1px solid var(--line); background: var(--card); border-radius: 16px; backdrop-filter: blur(12px); box-shadow: 0 12px 26px rgba(2, 6, 20, 0.35); }
 
-        .mobile-tabbar {
-          display: grid; grid-template-columns: repeat(5,1fr); gap: .2rem; position: fixed;
-          left: 50%; transform: translateX(-50%); bottom: max(.5rem, env(safe-area-inset-bottom));
-          width: min(96vw, 500px);
-          background: rgba(7, 24, 38, .85);
-          border: 1px solid rgba(124, 214, 223, .3);
-          border-radius: 22px; padding: .45rem; backdrop-filter: blur(14px);
-        }
-        .tab { border:none; background:transparent; color:#b9d8e8; padding:.35rem 0; display:flex; flex-direction:column; align-items:center; gap:.15rem; border-radius:12px; cursor:pointer; }
-        .tab-icon { width:20px; height:20px; display:inline-flex; }
-        .tab-icon svg { width:100%; height:100%; stroke:currentColor; fill:none; stroke-width:1.8; }
-        .tab span { font-size:.68rem; }
-        .tab.active { color:#fff; background: rgba(0, 100, 101, .5); }
+      .hero { padding: 0.9rem; display: grid; gap: 0.75rem; }
+      .hero h2 { margin: 0; font-size: 1.03rem; }
+      .hero p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+
+      .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+      .btn { border: none; border-radius: 11px; min-height: 42px; font-weight: 650; }
+      .btn-primary { background: linear-gradient(180deg, #35c3ff, var(--primary)); color: #032640; }
+      .btn-soft { background: rgba(18, 179, 255, 0.18); color: #dff3ff; border: 1px solid rgba(111, 207, 255, 0.32); }
+
+      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+      .metric { padding: 0.72rem; }
+      .metric h3 { margin: 0; color: var(--muted); font-size: 0.78rem; font-weight: 600; }
+      .metric strong { display: block; margin-top: 0.3rem; font-size: 1.22rem; }
+      .metric span { font-size: 0.75rem; color: var(--muted); }
+
+      .panel { padding: 0.85rem; }
+      .panel h3 { margin: 0 0 0.55rem; font-size: 0.95rem; }
+
+      .list { display: grid; gap: 0.5rem; }
+      .item { border: 1px solid rgba(147, 196, 255, 0.2); background: rgba(255, 255, 255, 0.04); border-radius: 11px; padding: 0.6rem; }
+      .row { display: flex; justify-content: space-between; gap: 0.45rem; align-items: center; }
+      .item b { font-size: 0.9rem; }
+      .item small { color: var(--muted); }
+
+      .chip { font-size: 0.7rem; border-radius: 999px; padding: 0.2rem 0.4rem; font-weight: 700; }
+      .chip-ok { background: rgba(45, 212, 191, 0.2); color: #8ff4e6; }
+      .chip-warn { background: rgba(245, 158, 11, 0.2); color: #ffd28a; }
+      .chip-danger { background: rgba(244, 63, 94, 0.2); color: #ff9eb2; }
+
+      .incident-form { display: grid; gap: 0.45rem; }
+      .field { width: 100%; border-radius: 10px; border: 1px solid rgba(147, 196, 255, 0.28); background: rgba(7, 23, 42, 0.8); color: var(--text); padding: 0.58rem; }
+
+      .tabbar {
+        position: fixed; left: 50%; transform: translateX(-50%); bottom: max(0.52rem, env(safe-area-inset-bottom));
+        width: min(96vw, 500px); border: 1px solid rgba(129, 198, 255, 0.3); border-radius: 19px;
+        background: rgba(5, 16, 30, 0.84); backdrop-filter: blur(12px); padding: 0.4rem;
+        display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.18rem;
+      }
+      .tab { border: none; background: transparent; color: #9ec4ea; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; border-radius: 11px; padding: 0.32rem 0; font-size: 0.96rem; }
+      .tab span { font-size: 0.66rem; }
+      .tab.active { color: #eaffff; background: rgba(18, 179, 255, 0.24); }
+
+      .desktop-note { display: none; }
+      @media (min-width: 900px) {
+        .app { max-width: 1060px; padding-bottom: 2rem; }
+        .desktop-note { display: block; color: var(--muted); margin-top: 0.3rem; }
+        .layout { display: grid; grid-template-columns: 1.15fr 1fr; gap: 0.75rem; }
+        .tabbar { position: static; transform: none; width: 100%; margin-top: 0.7rem; }
       }
     </style>
   </head>
   <body>
-    <div class="app-shell">
-      <header class="topbar" id="view-inicio">
-        <div><p class="eyebrow">Operativa</p><h1>Panel Comercial</h1></div>
-        <button class="icon-btn" id="openNotifications" aria-label="Notificaciones">🔔</button>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <small>MASTERSON SECURITY</small>
+          <h1>Centro de Operaciones</h1>
+          <p class="desktop-note">Monitoreo de guardias, incidentes, rutas y respuesta táctica.</p>
+        </div>
+        <button class="icon-btn" id="notifBtn" aria-label="Notificaciones">🔔</button>
       </header>
 
-      <main class="content">
-        <section class="windows">
-          <article class="app-window active" id="window-inicio">
-            <section class="hero-card card">
-              <h2>Control de ventas y operación</h2>
-              <div class="hero-actions">
-                <button class="btn btn-primary" id="createOperationBtn">Nueva venta</button>
-                <button class="btn btn-soft" id="refreshBtn">Actualizar KPIs</button>
-              </div>
-            </section>
-            <section class="metrics-grid" id="generalMetrics"></section>
-          </article>
+      <main class="stack" id="view-inicio">
+        <section class="card hero">
+          <h2>Estado general: Cobertura Activa</h2>
+          <p>24 zonas monitoreadas · 3 móviles en patrulla · 1 alerta de prioridad media.</p>
+          <div class="actions">
+            <button class="btn btn-primary" id="newIncidentQuick">Nuevo incidente</button>
+            <button class="btn btn-soft" id="refreshOps">Actualizar estado</button>
+          </div>
+        </section>
 
-          <article class="app-window" id="window-equipo">
-            <section class="panel card" id="view-equipo">
-              <h3 class="section-title">Top de vendedores</h3>
-              <div class="top-sellers" id="topSellers"></div>
-              <h3 class="section-title">Equipo comercial</h3>
-              <div class="seller-list" id="sellerList"></div>
-            </section>
-          </article>
+        <section class="grid" id="metrics"></section>
 
-          <article class="app-window" id="window-nuevo">
-            <section class="panel card" id="view-nuevo">
-              <h3 class="section-title">Nueva venta</h3>
-              <form class="form-stack" id="newSaleForm">
-                <input class="input" id="saleClient" placeholder="Cliente" required />
-                <input class="input" id="saleAmount" placeholder="Monto" required />
-                <select class="select" id="saleSeller" required></select>
-                <button class="btn btn-primary" type="submit">Guardar venta</button>
-              </form>
-            </section>
-          </article>
+        <div class="layout">
+          <section class="card panel" id="view-equipo">
+            <h3>Equipo en servicio</h3>
+            <div class="list" id="guards"></div>
+          </section>
 
-          <article class="app-window" id="window-servicios">
-            <section class="panel card" id="view-servicios">
-              <h3 class="section-title">Servicios</h3>
-              <form class="form-stack" id="serviceForm">
-                <input class="input" id="serviceName" placeholder="Nombre del servicio" required />
-                <select class="select" id="serviceArea" required>
-                  <option value="">Selecciona un área</option><option>Logística</option><option>Postventa</option><option>Soporte</option><option>Comercial</option>
-                </select>
-                <button class="btn btn-primary" type="submit">Agregar servicio</button>
-              </form>
-              <div class="service-list" id="serviceList"></div>
-            </section>
-          </article>
+          <section class="card panel" id="view-incidentes">
+            <h3>Registro rápido de incidente</h3>
+            <form class="incident-form" id="incidentForm">
+              <input class="field" id="incidentTitle" placeholder="Título del incidente" required />
+              <select class="field" id="incidentPriority" required>
+                <option value="">Prioridad</option>
+                <option>Alta</option>
+                <option>Media</option>
+                <option>Baja</option>
+              </select>
+              <input class="field" id="incidentZone" placeholder="Zona / Objetivo" required />
+              <button class="btn btn-primary" type="submit">Crear incidente</button>
+            </form>
+          </section>
+        </div>
 
-          <article class="app-window" id="window-avisos">
-            <section class="panel card" id="view-avisos">
-              <h3 class="section-title">Novedades / Notificaciones</h3>
-              <div class="news-list" id="newsList"></div>
-            </section>
-          </article>
+        <section class="card panel" id="view-rutas">
+          <h3>Rutas y móviles</h3>
+          <div class="list" id="routes"></div>
+        </section>
+
+        <section class="card panel" id="view-alertas">
+          <h3>Alertas y novedades</h3>
+          <div class="list" id="alerts"></div>
         </section>
       </main>
 
-      <nav class="mobile-tabbar" aria-label="Navegación inferior">
-        <button class="tab active" data-view="inicio" aria-current="page"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M3 11.5L12 4l9 7.5"/><path d="M6.5 10.5V20h11V10.5"/></svg></span><span>Inicio</span></button>
-        <button class="tab" data-view="equipo"><span class="tab-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.8 18c.7-2.7 2.7-4 5.2-4s4.5 1.3 5.2 4"/><circle cx="17" cy="9" r="2.2"/><path d="M14.5 17.5c.6-1.7 1.9-2.7 3.8-2.9"/></svg></span><span>Equipo</span></button>
-        <button class="tab" data-view="nuevo"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span><span>Nuevo</span></button>
-        <button class="tab" data-view="servicios"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M6 7.5h12"/><path d="M6 12h12"/><path d="M6 16.5h8"/><rect x="4" y="4" width="16" height="16" rx="2.5"/></svg></span><span>Servicios</span></button>
-        <button class="tab" data-view="avisos"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M6.5 8a5.5 5.5 0 1 1 11 0c0 4.8 2 5.5 2 5.5h-15S6.5 12.8 6.5 8Z"/><path d="M10 17.5a2 2 0 0 0 4 0"/></svg></span><span>Avisos</span></button>
+      <nav class="tabbar" aria-label="Navegación">
+        <button class="tab active" data-target="view-inicio">🏠<span>Inicio</span></button>
+        <button class="tab" data-target="view-equipo">🛡️<span>Equipo</span></button>
+        <button class="tab" data-target="view-incidentes">🚨<span>Incidente</span></button>
+        <button class="tab" data-target="view-rutas">📍<span>Rutas</span></button>
+        <button class="tab" data-target="view-alertas">🔔<span>Alertas</span></button>
       </nav>
     </div>
 
     <script>
       const state = {
-        generalMetrics: [
-          { title: 'Ventas hoy', value: '$ 2.180.000', sub: '+15% vs ayer' },
-          { title: 'Operaciones cerradas', value: '34', sub: '6 en la última hora' },
-          { title: 'Ticket promedio', value: '$ 64.120', sub: 'Meta: $ 60.000' },
-          { title: 'Conversión', value: '27%', sub: '+2.1 pp semanal' }
+        metrics: [
+          { t: 'Guardias activos', v: '58', s: '4 en relevo' },
+          { t: 'Incidentes hoy', v: '12', s: '2 abiertos' },
+          { t: 'Tiempo respuesta', v: '4m 10s', s: '-18% vs ayer' },
+          { t: 'Cumplimiento ronda', v: '96%', s: 'Objetivo 95%' }
         ],
-        sellers: [
-          { name: 'Camila Pérez', area: 'Zona Norte', status: 'ok', sales: '$ 620.000', salesNum: 620000, ops: 11, conv: '31%', goals: '9/10', goalsNum: 90 },
-          { name: 'Matías Ríos', area: 'Zona Centro', status: 'ok', sales: '$ 540.000', salesNum: 540000, ops: 9, conv: '29%', goals: '8/10', goalsNum: 80 },
-          { name: 'Valentina Sosa', area: 'E-commerce', status: 'warn', sales: '$ 410.000', salesNum: 410000, ops: 7, conv: '22%', goals: '6/10', goalsNum: 60 },
-          { name: 'Nicolás Díaz', area: 'Empresas', status: 'ok', sales: '$ 610.000', salesNum: 610000, ops: 10, conv: '30%', goals: '10/10', goalsNum: 100 }
+        guards: [
+          { n: 'Lucía Mena', z: 'Planta Norte', st: 'ok', shift: 'Nocturno', incidents: 0 },
+          { n: 'Diego Arce', z: 'Puerto Seco', st: 'warn', shift: 'Tarde', incidents: 1 },
+          { n: 'Micaela Ríos', z: 'Torre Central', st: 'ok', shift: 'Mañana', incidents: 0 },
+          { n: 'Renzo Vidal', z: 'Parque Logístico', st: 'danger', shift: 'Nocturno', incidents: 2 }
         ],
-        services: [{ name: 'Instalación express', area: 'Postventa' }, { name: 'Seguimiento premium', area: 'Soporte' }],
-        news: [{ text: 'Nueva lista de precios activa desde las 14:00.', time: 'hace 15 min' }, { text: 'Objetivo semanal del equipo en 82% de cumplimiento.', time: 'hace 40 min' }],
-        selectedSeller: 0
-      };
-      const els = {
-        generalMetrics: document.getElementById('generalMetrics'), topSellers: document.getElementById('topSellers'), sellerList: document.getElementById('sellerList'),
-        saleSeller: document.getElementById('saleSeller'), serviceList: document.getElementById('serviceList'), newsList: document.getElementById('newsList')
+        routes: [
+          { mobile: 'Móvil 01', area: 'Anillo Norte', eta: '6 min' },
+          { mobile: 'Móvil 04', area: 'Corredor Industrial', eta: '9 min' },
+          { mobile: 'Móvil 07', area: 'Zona Portuaria', eta: '4 min' }
+        ],
+        alerts: [
+          { m: 'Sensor perimetral activado en Depósito 3.', level: 'Media' },
+          { m: 'Ronda completada en Torre Central.', level: 'Baja' },
+          { m: 'Solicitud de apoyo táctico en Puerto Seco.', level: 'Alta' }
+        ]
       };
 
-      function renderMetrics() { els.generalMetrics.innerHTML = state.generalMetrics.map((m) => `<article class="metric-card card"><h3>${m.title}</h3><strong>${m.value}</strong><span>${m.sub}</span></article>`).join(''); }
-      function renderTopSellers() {
-        const topSales = [...state.sellers].sort((a, b) => b.salesNum - a.salesNum)[0];
-        const topGoals = [...state.sellers].sort((a, b) => b.goalsNum - a.goalsNum)[0];
-        const topOps = [...state.sellers].sort((a, b) => b.ops - a.ops)[0];
-        els.topSellers.innerHTML = `<article class="top-item"><span>Mayor venta</span><strong>${topSales.name} · ${topSales.sales}</strong></article><article class="top-item"><span>Más objetivos</span><strong>${topGoals.name} · ${topGoals.goals}</strong></article><article class="top-item"><span>Más operaciones</span><strong>${topOps.name} · ${topOps.ops}</strong></article>`;
-      }
-      function renderSellers() {
-        els.sellerList.innerHTML = state.sellers.map((s, i) => `<article class="seller-item"><button class="seller-head" data-index="${i}"><div><h4>${s.name}</h4><small>${s.area}</small></div><span class="chip ${s.status === 'ok' ? 'chip-ok' : 'chip-warn'}">${s.status === 'ok' ? 'En objetivo' : 'A revisar'}</span></button><div class="seller-detail" style="display:${state.selectedSeller === i ? 'block' : 'none'}"><div class="kpi-mini-grid"><article class="kpi-mini"><b>${s.sales}</b><span>Ventas</span></article><article class="kpi-mini"><b>${s.ops}</b><span>Operaciones</span></article><article class="kpi-mini"><b>${s.conv}</b><span>Conversión</span></article><article class="kpi-mini"><b>${s.goals}</b><span>Objetivos</span></article></div></div></article>`).join('');
-        els.sellerList.querySelectorAll('.seller-head').forEach((btn) => btn.addEventListener('click', () => { const idx = Number(btn.dataset.index); state.selectedSeller = state.selectedSeller === idx ? -1 : idx; renderSellers(); }));
-      }
-      function renderSaleSellerOptions() { els.saleSeller.innerHTML = '<option value="">Selecciona vendedor</option>' + state.sellers.map((s) => `<option>${s.name}</option>`).join(''); }
-      function renderServices() { els.serviceList.innerHTML = state.services.map((s) => `<article class="service-item"><strong>${s.name}</strong><small>${s.area}</small></article>`).join(''); }
-      function renderNews() { els.newsList.innerHTML = state.news.map((n) => `<article class="news-item"><p>${n.text}</p><small>${n.time}</small></article>`).join(''); }
+      const metricsEl = document.getElementById('metrics');
+      const guardsEl = document.getElementById('guards');
+      const routesEl = document.getElementById('routes');
+      const alertsEl = document.getElementById('alerts');
 
-      function setActiveView(view) {
-        const mobile = window.matchMedia('(max-width: 768px)').matches;
-        if (!mobile) {
-          document.querySelectorAll('.app-window').forEach((w) => w.classList.remove('active'));
-          (document.getElementById(`window-${view}`) || document.getElementById('window-inicio')).classList.add('active');
-        } else {
-          const target = document.getElementById(`view-${view}`) || document.getElementById('view-inicio');
-          target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        document.querySelectorAll('.tab').forEach((t) => {
-          t.classList.remove('active');
-          t.removeAttribute('aria-current');
-          if (t.dataset.view === view) { t.classList.add('active'); t.setAttribute('aria-current', 'page'); }
+      function chip(level) {
+        if (level === 'Alta' || level === 'danger') return 'chip chip-danger';
+        if (level === 'Media' || level === 'warn') return 'chip chip-warn';
+        return 'chip chip-ok';
+      }
+
+      function render() {
+        metricsEl.innerHTML = state.metrics.map((m) => `<article class="card metric"><h3>${m.t}</h3><strong>${m.v}</strong><span>${m.s}</span></article>`).join('');
+        guardsEl.innerHTML = state.guards.map((g) => `<article class="item"><div class="row"><b>${g.n}</b><span class="${chip(g.st)}">${g.st === 'ok' ? 'Operativo' : g.st === 'warn' ? 'Atención' : 'Crítico'}</span></div><small>${g.z} · Turno ${g.shift} · Incidentes ${g.incidents}</small></article>`).join('');
+        routesEl.innerHTML = state.routes.map((r) => `<article class="item"><div class="row"><b>${r.mobile}</b><span class="chip chip-ok">ETA ${r.eta}</span></div><small>${r.area}</small></article>`).join('');
+        alertsEl.innerHTML = state.alerts.map((a) => `<article class="item"><div class="row"><b>${a.level}</b><span class="${chip(a.level)}">${a.level}</span></div><small>${a.m}</small></article>`).join('');
+      }
+
+      function activateTab(btn) {
+        document.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+        btn.classList.add('active');
+      }
+
+      function setup() {
+        document.querySelectorAll('.tab').forEach((tab) => {
+          tab.addEventListener('click', () => {
+            activateTab(tab);
+            const target = document.getElementById(tab.dataset.target);
+            target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        });
+
+        document.getElementById('newIncidentQuick').addEventListener('click', () => {
+          document.getElementById('view-incidentes')?.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        document.getElementById('refreshOps').addEventListener('click', () => {
+          state.metrics[1].v = String(Number(state.metrics[1].v) + 1);
+          render();
+        });
+
+        document.getElementById('notifBtn').addEventListener('click', () => {
+          document.getElementById('view-alertas')?.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        document.getElementById('incidentForm').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const title = document.getElementById('incidentTitle');
+          const priority = document.getElementById('incidentPriority');
+          const zone = document.getElementById('incidentZone');
+          state.alerts.unshift({ m: `${title.value} en ${zone.value}.`, level: priority.value });
+          title.value = '';
+          priority.value = '';
+          zone.value = '';
+          render();
+          document.getElementById('view-alertas')?.scrollIntoView({ behavior: 'smooth' });
         });
       }
 
-      function setupInteractions() {
-        document.getElementById('createOperationBtn').addEventListener('click', () => setActiveView('nuevo'));
-        document.getElementById('refreshBtn').addEventListener('click', () => { state.generalMetrics[1].sub = `${Math.floor(Math.random() * 8) + 3} en la última hora`; renderMetrics(); });
-        document.getElementById('openNotifications').addEventListener('click', () => setActiveView('avisos'));
-        document.getElementById('serviceForm').addEventListener('submit', (e) => { e.preventDefault(); const n = document.getElementById('serviceName'); const a = document.getElementById('serviceArea'); state.services.unshift({ name: n.value.trim(), area: a.value }); renderServices(); n.value = ''; a.value = ''; });
-        document.getElementById('newSaleForm').addEventListener('submit', (e) => { e.preventDefault(); const c = document.getElementById('saleClient'); const m = document.getElementById('saleAmount'); const v = els.saleSeller; window.alert(`Venta guardada: ${c.value} - ${m.value} (${v.value})`); c.value = ''; m.value = ''; v.value = ''; setActiveView('inicio'); });
-        document.querySelectorAll('.tab').forEach((tab) => tab.addEventListener('click', () => setActiveView(tab.dataset.view)));
-      }
-
-      renderMetrics(); renderTopSellers(); renderSellers(); renderSaleSellerOptions(); renderServices(); renderNews(); setupInteractions();
+      render();
+      setup();
     </script>
   </body>
 </html>
