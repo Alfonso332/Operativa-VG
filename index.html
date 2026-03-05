@@ -16,215 +16,118 @@
         --radius: 18px;
         --shadow: 0 14px 38px rgba(17, 24, 39, 0.08);
       }
-
       * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
-      body {
-        margin: 0;
-        font-family: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
-        color: var(--text);
-        background: radial-gradient(circle at top, #e7ecfd 0, var(--bg) 48%);
-      }
-
+      body { margin: 0; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text); background: radial-gradient(circle at top, #e7ecfd 0, var(--bg) 48%); }
       .app-shell { min-height: 100dvh; max-width: 1200px; margin: 0 auto; padding: 1rem; }
       .topbar { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; }
       .topbar h1 { margin: 0.2rem 0 0; font-size: clamp(1.2rem, 2.4vw, 1.9rem); }
       .eyebrow { margin: 0; color: var(--muted); font-size: 0.85rem; }
-
-      .icon-btn {
-        border: none; background: var(--card); border-radius: 14px; width: 44px; height: 44px;
-        box-shadow: var(--shadow); cursor: pointer;
-      }
-
+      .icon-btn { border: none; background: var(--card); border-radius: 14px; width: 44px; height: 44px; box-shadow: var(--shadow); cursor: pointer; }
       .content { margin-top: 1rem; display: grid; gap: 1rem; }
       .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); }
-
       .hero-card { padding: 1rem; display: flex; gap: 0.75rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-      .hero-card h2 { margin: 0; font-size: 1.1rem; }
       .hero-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-
-      .btn {
-        border: none; border-radius: 12px; padding: 0.7rem 0.95rem; font-weight: 600; cursor: pointer;
-      }
+      .btn { border: none; border-radius: 12px; padding: 0.7rem 0.95rem; font-weight: 600; cursor: pointer; }
       .btn-primary { background: var(--primary); color: white; }
       .btn-soft { background: var(--primary-soft); color: #1a2b68; }
-
-      .metrics-grid {
-        display: grid; gap: 0.8rem; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
-      }
+      .metrics-grid { display: grid; gap: 0.8rem; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); }
       .metric-card { padding: 0.95rem; }
       .metric-card h3 { margin: 0; font-size: 0.85rem; color: var(--muted); }
       .metric-card strong { display: block; margin-top: 0.35rem; font-size: 1.35rem; }
       .metric-card span { color: var(--muted); font-size: 0.82rem; }
-
       .section-title { margin: 0 0 0.7rem; font-size: 1rem; }
       .split { display: grid; gap: 1rem; grid-template-columns: 1.35fr 1fr; }
       .panel { padding: 1rem; }
-
       .seller-list { display: grid; gap: 0.65rem; }
-      .seller-item {
-        border: 1px solid #e7ebf5; border-radius: 12px; padding: 0.7rem; display: grid;
-        grid-template-columns: 1fr auto; align-items: center; gap: 0.4rem;
-      }
+      .seller-item { border: 1px solid #e7ebf5; border-radius: 12px; padding: 0.7rem; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0.4rem; }
       .seller-item h4 { margin: 0; font-size: 0.93rem; }
       .seller-item small { color: var(--muted); }
       .chip { font-size: 0.76rem; padding: 0.22rem 0.46rem; border-radius: 999px; font-weight: 600; }
       .chip-ok { color: #05543a; background: #d8f7e8; }
       .chip-warn { color: #7b4a00; background: #ffe9ca; }
-
       .seller-kpi { margin-top: 0.8rem; border-top: 1px solid #edf0f7; padding-top: 0.7rem; }
       .kpi-mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.55rem; }
       .kpi-mini { background: #f8faff; border-radius: 10px; padding: 0.55rem; }
       .kpi-mini b { display: block; font-size: 1rem; }
       .kpi-mini span { font-size: 0.75rem; color: var(--muted); }
-
       .form-stack { display: grid; gap: 0.55rem; }
-      .input, .select {
-        width: 100%; border: 1px solid #dfe5f2; border-radius: 10px; padding: 0.65rem; background: #fff;
-      }
-
+      .input, .select { width: 100%; border: 1px solid #dfe5f2; border-radius: 10px; padding: 0.65rem; background: #fff; }
       .service-list, .news-list { margin-top: 0.8rem; display: grid; gap: 0.5rem; }
-      .service-item, .news-item {
-        padding: 0.6rem; border-radius: 10px; border: 1px solid #e7ebf5; background: #fafcff;
-        display: flex; justify-content: space-between; gap: 0.5rem;
-      }
+      .service-item, .news-item { padding: 0.6rem; border-radius: 10px; border: 1px solid #e7ebf5; background: #fafcff; display: flex; justify-content: space-between; gap: 0.5rem; }
       .news-item p { margin: 0; font-size: 0.85rem; }
       .news-item small { color: var(--muted); }
-
+      .hidden { display: none !important; }
       .mobile-tabbar { display: none; }
-
-      @media (max-width: 920px) {
-        .split { grid-template-columns: 1fr; }
-      }
-
+      @media (max-width: 920px) { .split { grid-template-columns: 1fr; } }
       @media (max-width: 768px) {
         body { background: #121826; }
-        .app-shell {
-          max-width: 480px;
-          background: linear-gradient(180deg, #1e2a44 0%, #111827 24%, #0f172a 100%);
-          padding: calc(env(safe-area-inset-top) + 0.8rem) 0.8rem calc(env(safe-area-inset-bottom) + 5.2rem);
-        }
-
-        .topbar h1, .hero-card h2, .metric-card strong, .section-title, .seller-item h4 { color: #e8edff; }
+        .app-shell { max-width: 480px; background: linear-gradient(180deg, #1e2a44 0%, #111827 24%, #0f172a 100%); padding: calc(env(safe-area-inset-top) + 0.8rem) 0.8rem calc(env(safe-area-inset-bottom) + 5.2rem); }
+        .topbar h1, .section-title, .seller-item h4 { color: #e8edff; }
         .eyebrow, .metric-card h3, .metric-card span, .seller-item small, .kpi-mini span, .news-item small { color: #9fb1d9; }
-
-        .card, .icon-btn, .seller-item, .service-item, .news-item, .kpi-mini {
-          background: rgba(255, 255, 255, 0.06);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(173, 196, 255, 0.13);
-          box-shadow: none;
-        }
-
+        .card, .icon-btn, .seller-item, .service-item, .news-item, .kpi-mini { background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(10px); border: 1px solid rgba(173, 196, 255, 0.13); box-shadow: none; }
         .btn-soft { background: rgba(92, 126, 255, 0.22); color: #dde7ff; }
-        .input, .select {
-          background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(173, 196, 255, 0.2); color: #e8edff;
-        }
-
+        .input, .select { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(173, 196, 255, 0.2); color: #e8edff; }
         .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem; }
-        .kpi-mini-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
-        .mobile-tabbar {
-          display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.2rem; position: fixed;
-          left: 50%; transform: translateX(-50%); bottom: max(0.6rem, env(safe-area-inset-bottom));
-          width: min(95vw, 460px); background: rgba(14, 22, 40, 0.9);
-          border: 1px solid rgba(160, 184, 238, 0.18); border-radius: 22px; padding: 0.45rem;
-          backdrop-filter: blur(12px);
-        }
-
-        .tab {
-          border: none; background: transparent; color: #9fb1d9; padding: 0.3rem 0;
-          display: flex; flex-direction: column; align-items: center; gap: 0.15rem;
-          font-size: 1rem; border-radius: 12px; cursor: pointer;
-        }
-        .tab-icon {
-          width: 20px; height: 20px; display: inline-flex;
-        }
+        .mobile-tabbar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.2rem; position: fixed; left: 50%; transform: translateX(-50%); bottom: max(0.6rem, env(safe-area-inset-bottom)); width: min(95vw, 460px); background: rgba(14, 22, 40, 0.9); border: 1px solid rgba(160, 184, 238, 0.18); border-radius: 22px; padding: 0.45rem; backdrop-filter: blur(12px); }
+        .tab { border: none; background: transparent; color: #9fb1d9; padding: 0.3rem 0; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; border-radius: 12px; cursor: pointer; }
+        .tab-icon { width: 20px; height: 20px; display: inline-flex; }
         .tab-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 1.8; }
-        .tab span { font-size: 0.68rem; margin-top: 0.12rem; }
+        .tab span { font-size: 0.68rem; }
         .tab.active { color: #fff; background: rgba(56, 96, 255, 0.3); }
       }
     </style>
   </head>
   <body>
     <div class="app-shell">
-      <header class="topbar" id="topSection">
-        <div>
-          <p class="eyebrow">Operativa</p>
-          <h1>Panel Comercial</h1>
-        </div>
+      <header class="topbar">
+        <div><p class="eyebrow">Operativa</p><h1>Panel Comercial</h1></div>
         <button class="icon-btn" aria-label="Notificaciones" id="openNotifications">🔔</button>
       </header>
-
       <main class="content" aria-label="Contenido principal">
         <section class="hero-card card" id="homeSection">
           <h2>Control de ventas y operación</h2>
           <div class="hero-actions">
-            <button class="btn btn-primary" id="createOperationBtn">Nueva operación</button>
+            <button class="btn btn-primary" id="createOperationBtn">Nueva venta</button>
             <button class="btn btn-soft" id="refreshBtn">Actualizar KPIs</button>
           </div>
         </section>
 
-        <section class="metrics-grid" id="generalMetrics"></section>
+        <section class="panel card hidden" id="newSaleSection">
+          <h3 class="section-title">Nueva venta</h3>
+          <form class="form-stack" id="newSaleForm">
+            <input class="input" id="saleClient" placeholder="Cliente" required />
+            <input class="input" id="saleAmount" placeholder="Monto" required />
+            <select class="select" id="saleSeller" required></select>
+            <button class="btn btn-primary" type="submit">Guardar venta</button>
+          </form>
+        </section>
 
+        <section class="metrics-grid" id="generalMetrics"></section>
         <section class="split">
           <article class="panel card" id="teamSection">
             <h3 class="section-title">Vendedores y KPIs</h3>
             <div class="seller-list" id="sellerList"></div>
             <div class="seller-kpi" id="sellerKpiDetail"></div>
           </article>
-
           <aside class="panel card" id="servicesSection">
             <h3 class="section-title">Servicios</h3>
             <form class="form-stack" id="serviceForm">
               <input class="input" id="serviceName" placeholder="Nombre del servicio" required />
-              <select class="select" id="serviceArea" required>
-                <option value="">Selecciona un área</option>
-                <option>Logística</option>
-                <option>Postventa</option>
-                <option>Soporte</option>
-                <option>Comercial</option>
-              </select>
+              <select class="select" id="serviceArea" required><option value="">Selecciona un área</option><option>Logística</option><option>Postventa</option><option>Soporte</option><option>Comercial</option></select>
               <button class="btn btn-primary" type="submit">Agregar servicio</button>
             </form>
             <div class="service-list" id="serviceList"></div>
-
-            <h3 class="section-title" style="margin-top: 1rem" id="newsSection">Novedades / Notificaciones</h3>
+            <h3 class="section-title" style="margin-top:1rem" id="newsSection">Novedades / Notificaciones</h3>
             <div class="news-list" id="newsList"></div>
           </aside>
         </section>
       </main>
-
       <nav class="mobile-tabbar" aria-label="Navegación inferior">
-        <button class="tab active" aria-current="page" data-view="inicio">
-          <span class="tab-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M3 11.5L12 4l9 7.5"/><path d="M6.5 10.5V20h11V10.5"/></svg>
-          </span>
-          <span>Inicio</span>
-        </button>
-        <button class="tab" data-view="equipo">
-          <span class="tab-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.8 18c.7-2.7 2.7-4 5.2-4s4.5 1.3 5.2 4"/><circle cx="17" cy="9" r="2.2"/><path d="M14.5 17.5c.6-1.7 1.9-2.7 3.8-2.9"/></svg>
-          </span>
-          <span>Equipo</span>
-        </button>
-        <button class="tab" data-view="nuevo">
-          <span class="tab-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-          </span>
-          <span>Nuevo</span>
-        </button>
-        <button class="tab" data-view="servicios">
-          <span class="tab-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M6 7.5h12"/><path d="M6 12h12"/><path d="M6 16.5h8"/><rect x="4" y="4" width="16" height="16" rx="2.5"/></svg>
-          </span>
-          <span>Servicios</span>
-        </button>
-        <button class="tab" data-view="avisos">
-          <span class="tab-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M6.5 8a5.5 5.5 0 1 1 11 0c0 4.8 2 5.5 2 5.5h-15S6.5 12.8 6.5 8Z"/><path d="M10 17.5a2 2 0 0 0 4 0"/></svg>
-          </span>
-          <span>Avisos</span>
-        </button>
+        <button class="tab active" aria-current="page" data-view="inicio"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M3 11.5L12 4l9 7.5"/><path d="M6.5 10.5V20h11V10.5"/></svg></span><span>Inicio</span></button>
+        <button class="tab" data-view="equipo"><span class="tab-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.8 18c.7-2.7 2.7-4 5.2-4s4.5 1.3 5.2 4"/><circle cx="17" cy="9" r="2.2"/><path d="M14.5 17.5c.6-1.7 1.9-2.7 3.8-2.9"/></svg></span><span>Equipo</span></button>
+        <button class="tab" data-view="nuevo"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span><span>Nuevo</span></button>
+        <button class="tab" data-view="servicios"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M6 7.5h12"/><path d="M6 12h12"/><path d="M6 16.5h8"/><rect x="4" y="4" width="16" height="16" rx="2.5"/></svg></span><span>Servicios</span></button>
+        <button class="tab" data-view="avisos"><span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M6.5 8a5.5 5.5 0 1 1 11 0c0 4.8 2 5.5 2 5.5h-15S6.5 12.8 6.5 8Z"/><path d="M10 17.5a2 2 0 0 0 4 0"/></svg></span><span>Avisos</span></button>
       </nav>
     </div>
 
@@ -242,161 +145,50 @@
           { name: 'Valentina Sosa', area: 'E-commerce', status: 'warn', sales: '$ 410.000', ops: 7, conv: '22%' },
           { name: 'Nicolás Díaz', area: 'Empresas', status: 'ok', sales: '$ 610.000', ops: 10, conv: '30%' }
         ],
-        services: [
-          { name: 'Instalación express', area: 'Postventa' },
-          { name: 'Seguimiento premium', area: 'Soporte' }
-        ],
+        services: [{ name: 'Instalación express', area: 'Postventa' }, { name: 'Seguimiento premium', area: 'Soporte' }],
         news: [
           { text: 'Nueva lista de precios activa desde las 14:00.', time: 'hace 15 min' },
-          { text: 'Objetivo semanal del equipo en 82% de cumplimiento.', time: 'hace 40 min' },
-          { text: 'Se habilitó la campaña de retención para clientes inactivos.', time: 'hace 1 h' }
+          { text: 'Objetivo semanal del equipo en 82% de cumplimiento.', time: 'hace 40 min' }
         ],
         selectedSeller: 0
       };
 
-      const generalMetricsEl = document.getElementById('generalMetrics');
-      const sellerListEl = document.getElementById('sellerList');
-      const sellerKpiDetailEl = document.getElementById('sellerKpiDetail');
-      const serviceListEl = document.getElementById('serviceList');
-      const newsListEl = document.getElementById('newsList');
+      const els = {
+        generalMetrics: document.getElementById('generalMetrics'), sellerList: document.getElementById('sellerList'), sellerKpiDetail: document.getElementById('sellerKpiDetail'),
+        serviceList: document.getElementById('serviceList'), newsList: document.getElementById('newsList'), newSaleSection: document.getElementById('newSaleSection'),
+        newSaleForm: document.getElementById('newSaleForm'), saleSeller: document.getElementById('saleSeller')
+      };
 
-      function renderMetrics() {
-        generalMetricsEl.innerHTML = state.generalMetrics
-          .map((m) => `
-            <article class="metric-card card">
-              <h3>${m.title}</h3>
-              <strong>${m.value}</strong>
-              <span>${m.sub}</span>
-            </article>
-          `)
-          .join('');
-      }
-
+      function renderMetrics() { els.generalMetrics.innerHTML = state.generalMetrics.map((m)=>`<article class="metric-card card"><h3>${m.title}</h3><strong>${m.value}</strong><span>${m.sub}</span></article>`).join(''); }
       function renderSellers() {
-        sellerListEl.innerHTML = state.sellers
-          .map((s, idx) => `
-            <button class="seller-item" data-index="${idx}" style="text-align:left; background:none; cursor:pointer">
-              <div>
-                <h4>${s.name}</h4>
-                <small>${s.area}</small>
-              </div>
-              <span class="chip ${s.status === 'ok' ? 'chip-ok' : 'chip-warn'}">${s.status === 'ok' ? 'En objetivo' : 'A revisar'}</span>
-            </button>
-          `)
-          .join('');
+        els.sellerList.innerHTML = state.sellers.map((s, idx)=>`<button class="seller-item" data-index="${idx}" style="text-align:left;background:none;cursor:pointer"><div><h4>${s.name}</h4><small>${s.area}</small></div><span class="chip ${s.status==='ok'?'chip-ok':'chip-warn'}">${s.status==='ok'?'En objetivo':'A revisar'}</span></button>`).join('');
+        [...els.sellerList.querySelectorAll('.seller-item')].forEach((btn)=>btn.addEventListener('click',()=>{state.selectedSeller=Number(btn.dataset.index);renderSellerDetail();}));
+      }
+      function renderSellerDetail(){const s=state.sellers[state.selectedSeller];els.sellerKpiDetail.innerHTML=`<strong style="display:block;margin-bottom:0.5rem">KPIs de ${s.name}</strong><div class="kpi-mini-grid"><article class="kpi-mini"><b>${s.sales}</b><span>Ventas acumuladas</span></article><article class="kpi-mini"><b>${s.ops}</b><span>Operaciones</span></article><article class="kpi-mini"><b>${s.conv}</b><span>Conversión</span></article></div>`;}
+      function renderServices(){els.serviceList.innerHTML=state.services.map((s)=>`<article class="service-item"><strong>${s.name}</strong><small>${s.area}</small></article>`).join('');}
+      function renderNews(){els.newsList.innerHTML=state.news.map((n)=>`<article class="news-item"><p>${n.text}</p><small>${n.time}</small></article>`).join('');}
+      function renderSaleSellerOptions(){els.saleSeller.innerHTML='<option value="">Selecciona vendedor</option>'+state.sellers.map((s)=>`<option>${s.name}</option>`).join('');}
 
-        [...sellerListEl.querySelectorAll('.seller-item')].forEach((btn) => {
-          btn.addEventListener('click', () => {
-            state.selectedSeller = Number(btn.dataset.index);
-            renderSellerDetail();
-          });
-        });
+      function activateTab(tab){document.querySelectorAll('.tab').forEach((t)=>{t.classList.remove('active');t.removeAttribute('aria-current');});tab.classList.add('active');tab.setAttribute('aria-current','page');}
+      function showNewSale(show=true){els.newSaleSection.classList.toggle('hidden',!show);if(show) els.newSaleSection.scrollIntoView({behavior:'smooth',block:'start'});}
+      function navigateView(view){
+        if(view==='nuevo'){showNewSale(true);return;}
+        showNewSale(false);
+        const map={inicio:'.hero-card',equipo:'#teamSection',servicios:'#servicesSection',avisos:'#newsSection'};
+        const target=document.querySelector(map[view]||'.hero-card');
+        if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
       }
 
-      function renderSellerDetail() {
-        const s = state.sellers[state.selectedSeller];
-        sellerKpiDetailEl.innerHTML = `
-          <strong style="display:block; margin-bottom:0.5rem">KPIs de ${s.name}</strong>
-          <div class="kpi-mini-grid">
-            <article class="kpi-mini"><b>${s.sales}</b><span>Ventas acumuladas</span></article>
-            <article class="kpi-mini"><b>${s.ops}</b><span>Operaciones</span></article>
-            <article class="kpi-mini"><b>${s.conv}</b><span>Conversión</span></article>
-          </div>
-        `;
+      function setupInteractions(){
+        document.getElementById('createOperationBtn').addEventListener('click',()=>showNewSale(true));
+        document.getElementById('refreshBtn').addEventListener('click',()=>{state.generalMetrics[1].sub=`${Math.floor(Math.random()*8)+3} en la última hora`;renderMetrics();});
+        document.getElementById('openNotifications').addEventListener('click',()=>window.alert(`Última novedad: ${state.news[0]?.text || 'No hay novedades por ahora'}`));
+        document.getElementById('serviceForm').addEventListener('submit',(e)=>{e.preventDefault();const n=document.getElementById('serviceName');const a=document.getElementById('serviceArea');state.services.unshift({name:n.value.trim(),area:a.value});renderServices();n.value='';a.value='';});
+        els.newSaleForm.addEventListener('submit',(e)=>{e.preventDefault();const client=document.getElementById('saleClient');const amount=document.getElementById('saleAmount');const seller=els.saleSeller;window.alert(`Venta guardada: ${client.value} - ${amount.value} (${seller.value})`);client.value='';amount.value='';seller.value='';showNewSale(false);});
+        document.querySelectorAll('.tab').forEach((tab)=>tab.addEventListener('click',()=>{activateTab(tab);navigateView(tab.dataset.view);}));
       }
 
-      function renderServices() {
-        serviceListEl.innerHTML = state.services
-          .map((service) => `<article class="service-item"><strong>${service.name}</strong><small>${service.area}</small></article>`)
-          .join('');
-      }
-
-      function renderNews() {
-        newsListEl.innerHTML = state.news
-          .map((n) => `<article class="news-item"><p>${n.text}</p><small>${n.time}</small></article>`)
-          .join('');
-      }
-
-      function activateTab(tab) {
-        document.querySelectorAll('.tab').forEach((t) => {
-          t.classList.remove('active');
-          t.removeAttribute('aria-current');
-        });
-        tab.classList.add('active');
-        tab.setAttribute('aria-current', 'page');
-      }
-
-      function openViewWindow(view) {
-        const viewMap = {
-          inicio: {
-            title: 'Inicio',
-            body: '<h1>Inicio</h1><p>Resumen general de operación y ventas.</p>'
-          },
-          equipo: {
-            title: 'Equipo',
-            body: '<h1>Equipo de ventas</h1><p>Listado de vendedores y detalle de KPIs individuales.</p>'
-          },
-          nuevo: {
-            title: 'Nuevo',
-            body: '<h1>Nueva operación</h1><p>Desde aquí puedes crear una nueva operación comercial.</p>'
-          },
-          servicios: {
-            title: 'Servicios',
-            body: '<h1>Servicios</h1><p>Administración y alta de servicios comerciales.</p>'
-          },
-          avisos: {
-            title: 'Avisos',
-            body: '<h1>Avisos y novedades</h1><p>Centro de notificaciones y novedades del equipo.</p>'
-          }
-        };
-
-        const current = viewMap[view] || { title: 'Vista', body: '<h1>Vista</h1>' };
-        const win = window.open('', '_blank', 'noopener,noreferrer');
-        if (!win) return;
-
-        win.document.write(`<!doctype html><html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>${current.title}</title><style>body{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#0f172a;color:#e2e8f0;margin:0;padding:24px} .card{max-width:560px;background:#111c33;border:1px solid #334155;border-radius:16px;padding:20px} h1{margin:0 0 10px;font-size:1.3rem} p{margin:0;color:#a5b4cf;line-height:1.5}</style></head><body><article class="card">${current.body}</article></body></html>`);
-        win.document.close();
-      }
-
-      function setupInteractions() {
-        document.getElementById('createOperationBtn').addEventListener('click', () => {
-          window.alert('Nueva operación creada correctamente');
-        });
-
-        document.getElementById('refreshBtn').addEventListener('click', () => {
-          state.generalMetrics[1].sub = `${Math.floor(Math.random() * 8) + 3} en la última hora`;
-          renderMetrics();
-        });
-
-        document.getElementById('openNotifications').addEventListener('click', () => {
-          const latest = state.news[0]?.text || 'No hay novedades por ahora';
-          window.alert(`Última novedad: ${latest}`);
-        });
-
-        document.getElementById('serviceForm').addEventListener('submit', (event) => {
-          event.preventDefault();
-          const nameInput = document.getElementById('serviceName');
-          const areaInput = document.getElementById('serviceArea');
-          state.services.unshift({ name: nameInput.value.trim(), area: areaInput.value });
-          renderServices();
-          nameInput.value = '';
-          areaInput.value = '';
-        });
-
-        document.querySelectorAll('.tab').forEach((tab) => {
-          tab.addEventListener('click', () => {
-            activateTab(tab);
-            openViewWindow(tab.dataset.view);
-          });
-        });
-      }
-
-      renderMetrics();
-      renderSellers();
-      renderSellerDetail();
-      renderServices();
-      renderNews();
-      setupInteractions();
+      renderMetrics(); renderSellers(); renderSellerDetail(); renderServices(); renderNews(); renderSaleSellerOptions(); setupInteractions();
     </script>
   </body>
 </html>
