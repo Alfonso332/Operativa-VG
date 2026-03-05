@@ -9,8 +9,8 @@
       :root {
         --bg: #f2f5fb;
         --card: #ffffff;
-        --text: #0f172a;
-        --muted: #5b6475;
+        --text: #102333;
+        --muted: #54667a;
         --primary: #006465;
         --primary-soft: #d8efed;
         --radius: 18px;
@@ -38,55 +38,81 @@
       .section-title { margin: 0 0 .7rem; font-size: 1rem; }
       .panel { padding: 1rem; }
       .windows { position: relative; min-height: 60vh; }
-      .app-window { display: none; animation: fade .2s ease; }
+      .app-window { display: none; animation: fade .25s ease; }
       .app-window.active { display: block; }
       @keyframes fade { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: translateY(0);} }
-
-      .top-sellers { display: grid; gap: .45rem; margin-bottom: .9rem; }
-      .top-item { display: flex; justify-content: space-between; padding: .55rem .7rem; border-radius: 10px; background: #f3faf9; border: 1px solid #d8ecea; font-size: .85rem; }
-      .seller-list { display: grid; gap: .55rem; }
-      .seller-item { border: 1px solid #e7ebf5; border-radius: 12px; padding: .7rem; background: #fafcff; text-align: left; cursor: pointer; }
-      .seller-head { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .4rem; }
-      .seller-item h4 { margin: 0; font-size: .93rem; }
-      .seller-item small { color: var(--muted); }
+      .top-sellers,.seller-list,.service-list,.news-list { display: grid; gap: .55rem; }
+      .top-item,.service-item,.news-item,.seller-item { border: 1px solid #e7ebf5; border-radius: 12px; padding: .7rem; background: #fafcff; }
+      .top-item { display:flex; justify-content:space-between; }
+      .seller-head { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .4rem; border: none; background: none; width: 100%; text-align: left; cursor: pointer; padding: 0; }
+      .seller-item h4 { margin: 0; }
+      .seller-item small,.news-item small { color: var(--muted); }
       .chip { font-size: .76rem; padding: .22rem .46rem; border-radius: 999px; font-weight: 600; }
       .chip-ok { color: #05543a; background: #d8f7e8; }
       .chip-warn { color: #7b4a00; background: #ffe9ca; }
       .seller-detail { margin-top: .6rem; border-top: 1px solid #e8edf6; padding-top: .6rem; }
       .kpi-mini-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .45rem; }
       .kpi-mini { background: #f8faff; border-radius: 10px; padding: .5rem; }
-      .kpi-mini b { display: block; }
-      .kpi-mini span { font-size: .73rem; color: var(--muted); }
-
+      .kpi-mini span { color: var(--muted); font-size: .73rem; }
       .form-stack { display: grid; gap: .55rem; }
-      .input, .select { width: 100%; border: 1px solid #dfe5f2; border-radius: 10px; padding: .65rem; background: #fff; }
-      .service-list, .news-list { display: grid; gap: .55rem; margin-top: .55rem; }
-      .service-item, .news-item { border: 1px solid #e7ebf5; border-radius: 12px; padding: .7rem; background: #fafcff; }
-      .news-item small { color: var(--muted); }
+      .input,.select { width: 100%; border: 1px solid #dfe5f2; border-radius: 10px; padding: .65rem; background: #fff; }
       .mobile-tabbar { display: none; }
 
       @media (max-width:768px) {
-        body { background: #121826; }
-        .app-shell { max-width: 480px; background: linear-gradient(180deg, #174240 0%, #122a2f 24%, #0f172a 100%); padding: calc(env(safe-area-inset-top)+.8rem) .8rem calc(env(safe-area-inset-bottom)+5.2rem); }
-        .topbar h1, .section-title, .seller-item h4, .metric-card strong { color: #e8edff; }
-        .eyebrow, .metric-card h3, .metric-card span, .seller-item small, .kpi-mini span, .news-item small { color: #9fb1d9; }
-        .card, .icon-btn, .seller-item, .service-item, .news-item, .kpi-mini, .top-item { background: rgba(255,255,255,.06); backdrop-filter: blur(10px); border: 1px solid rgba(173,196,255,.13); box-shadow: none; }
-        .btn-soft { background: rgba(0,100,101,.35); color: #d8f3f1; }
-        .input, .select { background: rgba(255,255,255,.04); border: 1px solid rgba(173,196,255,.2); color: #e8edff; }
+        body { background: #071521; color: #eaf6ff; }
+        .app-shell {
+          max-width: 520px;
+          background:
+            radial-gradient(circle at 85% -10%, rgba(0, 161, 155, 0.35), transparent 38%),
+            radial-gradient(circle at 0% 40%, rgba(0, 100, 101, 0.26), transparent 40%),
+            linear-gradient(180deg, #0b2830 0%, #0c1e2a 35%, #071521 100%);
+          padding: calc(env(safe-area-inset-top)+.8rem) .8rem calc(env(safe-area-inset-bottom)+5.6rem);
+        }
+        .topbar h1,.section-title,.seller-item h4,.metric-card strong,.top-item strong { color: #f2fbff; }
+        .eyebrow,.metric-card h3,.metric-card span,.seller-item small,.kpi-mini span,.news-item small { color: #b9d8e8; }
+        .card,.icon-btn,.seller-item,.service-item,.news-item,.kpi-mini,.top-item {
+          background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05));
+          border: 1px solid rgba(152, 222, 235, 0.22);
+          box-shadow: 0 10px 22px rgba(2, 8, 20, 0.28), inset 0 1px 0 rgba(255,255,255,.15);
+          backdrop-filter: blur(12px);
+        }
+        .hero-card { position: relative; overflow: hidden; }
+        .hero-card::after {
+          content: "";
+          position: absolute;
+          width: 120px; height: 120px; right: -30px; top: -30px;
+          background: radial-gradient(circle, rgba(0, 214, 193, .35), transparent 70%);
+          pointer-events: none;
+        }
+        .btn-primary { box-shadow: 0 8px 18px rgba(0, 100, 101, .45); }
+        .btn-soft { background: rgba(0,100,101,.33); color: #dbf6f4; }
+        .input,.select { background: rgba(255,255,255,.06); border: 1px solid rgba(173,196,255,.3); color: #effbff; }
         .metrics-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
         .kpi-mini-grid { grid-template-columns: repeat(2, 1fr); }
-        .mobile-tabbar { display: grid; grid-template-columns: repeat(5,1fr); gap: .2rem; position: fixed; left: 50%; transform: translateX(-50%); bottom: max(.6rem, env(safe-area-inset-bottom)); width: min(95vw,460px); background: rgba(14,22,40,.9); border: 1px solid rgba(160,184,238,.18); border-radius: 22px; padding: .45rem; backdrop-filter: blur(12px); }
-        .tab { border:none; background:transparent; color:#9fb1d9; padding:.3rem 0; display:flex; flex-direction:column; align-items:center; gap:.15rem; border-radius:12px; cursor:pointer; }
+
+        /* Scroll vertical continuo en celular */
+        .windows { display: grid; gap: .8rem; }
+        .app-window { display: block !important; animation: none; }
+
+        .mobile-tabbar {
+          display: grid; grid-template-columns: repeat(5,1fr); gap: .2rem; position: fixed;
+          left: 50%; transform: translateX(-50%); bottom: max(.5rem, env(safe-area-inset-bottom));
+          width: min(96vw, 500px);
+          background: rgba(7, 24, 38, .85);
+          border: 1px solid rgba(124, 214, 223, .3);
+          border-radius: 22px; padding: .45rem; backdrop-filter: blur(14px);
+        }
+        .tab { border:none; background:transparent; color:#b9d8e8; padding:.35rem 0; display:flex; flex-direction:column; align-items:center; gap:.15rem; border-radius:12px; cursor:pointer; }
         .tab-icon { width:20px; height:20px; display:inline-flex; }
         .tab-icon svg { width:100%; height:100%; stroke:currentColor; fill:none; stroke-width:1.8; }
         .tab span { font-size:.68rem; }
-        .tab.active { color:#fff; background: rgba(0,100,101,.45); }
+        .tab.active { color:#fff; background: rgba(0, 100, 101, .5); }
       }
     </style>
   </head>
   <body>
     <div class="app-shell">
-      <header class="topbar">
+      <header class="topbar" id="view-inicio">
         <div><p class="eyebrow">Operativa</p><h1>Panel Comercial</h1></div>
         <button class="icon-btn" id="openNotifications" aria-label="Notificaciones">🔔</button>
       </header>
@@ -105,7 +131,7 @@
           </article>
 
           <article class="app-window" id="window-equipo">
-            <section class="panel card">
+            <section class="panel card" id="view-equipo">
               <h3 class="section-title">Top de vendedores</h3>
               <div class="top-sellers" id="topSellers"></div>
               <h3 class="section-title">Equipo comercial</h3>
@@ -114,7 +140,7 @@
           </article>
 
           <article class="app-window" id="window-nuevo">
-            <section class="panel card">
+            <section class="panel card" id="view-nuevo">
               <h3 class="section-title">Nueva venta</h3>
               <form class="form-stack" id="newSaleForm">
                 <input class="input" id="saleClient" placeholder="Cliente" required />
@@ -126,7 +152,7 @@
           </article>
 
           <article class="app-window" id="window-servicios">
-            <section class="panel card">
+            <section class="panel card" id="view-servicios">
               <h3 class="section-title">Servicios</h3>
               <form class="form-stack" id="serviceForm">
                 <input class="input" id="serviceName" placeholder="Nombre del servicio" required />
@@ -140,7 +166,7 @@
           </article>
 
           <article class="app-window" id="window-avisos">
-            <section class="panel card">
+            <section class="panel card" id="view-avisos">
               <h3 class="section-title">Novedades / Notificaciones</h3>
               <div class="news-list" id="newsList"></div>
             </section>
@@ -175,67 +201,35 @@
         news: [{ text: 'Nueva lista de precios activa desde las 14:00.', time: 'hace 15 min' }, { text: 'Objetivo semanal del equipo en 82% de cumplimiento.', time: 'hace 40 min' }],
         selectedSeller: 0
       };
-
       const els = {
-        generalMetrics: document.getElementById('generalMetrics'),
-        topSellers: document.getElementById('topSellers'),
-        sellerList: document.getElementById('sellerList'),
-        saleSeller: document.getElementById('saleSeller'),
-        serviceList: document.getElementById('serviceList'),
-        newsList: document.getElementById('newsList')
+        generalMetrics: document.getElementById('generalMetrics'), topSellers: document.getElementById('topSellers'), sellerList: document.getElementById('sellerList'),
+        saleSeller: document.getElementById('saleSeller'), serviceList: document.getElementById('serviceList'), newsList: document.getElementById('newsList')
       };
 
-      function renderMetrics() {
-        els.generalMetrics.innerHTML = state.generalMetrics.map((m) => `<article class="metric-card card"><h3>${m.title}</h3><strong>${m.value}</strong><span>${m.sub}</span></article>`).join('');
-      }
-
+      function renderMetrics() { els.generalMetrics.innerHTML = state.generalMetrics.map((m) => `<article class="metric-card card"><h3>${m.title}</h3><strong>${m.value}</strong><span>${m.sub}</span></article>`).join(''); }
       function renderTopSellers() {
         const topSales = [...state.sellers].sort((a, b) => b.salesNum - a.salesNum)[0];
         const topGoals = [...state.sellers].sort((a, b) => b.goalsNum - a.goalsNum)[0];
         const topOps = [...state.sellers].sort((a, b) => b.ops - a.ops)[0];
-        els.topSellers.innerHTML = `
-          <article class="top-item"><span>Mayor venta</span><strong>${topSales.name} · ${topSales.sales}</strong></article>
-          <article class="top-item"><span>Más objetivos cumplidos</span><strong>${topGoals.name} · ${topGoals.goals}</strong></article>
-          <article class="top-item"><span>Más operaciones</span><strong>${topOps.name} · ${topOps.ops}</strong></article>
-        `;
+        els.topSellers.innerHTML = `<article class="top-item"><span>Mayor venta</span><strong>${topSales.name} · ${topSales.sales}</strong></article><article class="top-item"><span>Más objetivos</span><strong>${topGoals.name} · ${topGoals.goals}</strong></article><article class="top-item"><span>Más operaciones</span><strong>${topOps.name} · ${topOps.ops}</strong></article>`;
       }
-
       function renderSellers() {
-        els.sellerList.innerHTML = state.sellers.map((s, i) => `
-          <article class="seller-item" data-index="${i}">
-            <button class="seller-head" style="border:none;background:none;padding:0;width:100%;text-align:left;cursor:pointer">
-              <div><h4>${s.name}</h4><small>${s.area}</small></div>
-              <span class="chip ${s.status === 'ok' ? 'chip-ok' : 'chip-warn'}">${s.status === 'ok' ? 'En objetivo' : 'A revisar'}</span>
-            </button>
-            <div class="seller-detail" style="display:${state.selectedSeller === i ? 'block' : 'none'}">
-              <div class="kpi-mini-grid">
-                <article class="kpi-mini"><b>${s.sales}</b><span>Ventas</span></article>
-                <article class="kpi-mini"><b>${s.ops}</b><span>Operaciones</span></article>
-                <article class="kpi-mini"><b>${s.conv}</b><span>Conversión</span></article>
-                <article class="kpi-mini"><b>${s.goals}</b><span>Objetivos</span></article>
-              </div>
-            </div>
-          </article>
-        `).join('');
-
-        els.sellerList.querySelectorAll('.seller-head').forEach((btn, idx) => {
-          btn.addEventListener('click', () => {
-            state.selectedSeller = state.selectedSeller === idx ? -1 : idx;
-            renderSellers();
-          });
-        });
+        els.sellerList.innerHTML = state.sellers.map((s, i) => `<article class="seller-item"><button class="seller-head" data-index="${i}"><div><h4>${s.name}</h4><small>${s.area}</small></div><span class="chip ${s.status === 'ok' ? 'chip-ok' : 'chip-warn'}">${s.status === 'ok' ? 'En objetivo' : 'A revisar'}</span></button><div class="seller-detail" style="display:${state.selectedSeller === i ? 'block' : 'none'}"><div class="kpi-mini-grid"><article class="kpi-mini"><b>${s.sales}</b><span>Ventas</span></article><article class="kpi-mini"><b>${s.ops}</b><span>Operaciones</span></article><article class="kpi-mini"><b>${s.conv}</b><span>Conversión</span></article><article class="kpi-mini"><b>${s.goals}</b><span>Objetivos</span></article></div></div></article>`).join('');
+        els.sellerList.querySelectorAll('.seller-head').forEach((btn) => btn.addEventListener('click', () => { const idx = Number(btn.dataset.index); state.selectedSeller = state.selectedSeller === idx ? -1 : idx; renderSellers(); }));
       }
-
-      function renderSaleSellerOptions() {
-        els.saleSeller.innerHTML = '<option value="">Selecciona vendedor</option>' + state.sellers.map((s) => `<option>${s.name}</option>`).join('');
-      }
-
+      function renderSaleSellerOptions() { els.saleSeller.innerHTML = '<option value="">Selecciona vendedor</option>' + state.sellers.map((s) => `<option>${s.name}</option>`).join(''); }
       function renderServices() { els.serviceList.innerHTML = state.services.map((s) => `<article class="service-item"><strong>${s.name}</strong><small>${s.area}</small></article>`).join(''); }
       function renderNews() { els.newsList.innerHTML = state.news.map((n) => `<article class="news-item"><p>${n.text}</p><small>${n.time}</small></article>`).join(''); }
 
       function setActiveView(view) {
-        document.querySelectorAll('.app-window').forEach((w) => w.classList.remove('active'));
-        (document.getElementById(`window-${view}`) || document.getElementById('window-inicio')).classList.add('active');
+        const mobile = window.matchMedia('(max-width: 768px)').matches;
+        if (!mobile) {
+          document.querySelectorAll('.app-window').forEach((w) => w.classList.remove('active'));
+          (document.getElementById(`window-${view}`) || document.getElementById('window-inicio')).classList.add('active');
+        } else {
+          const target = document.getElementById(`view-${view}`) || document.getElementById('view-inicio');
+          target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
         document.querySelectorAll('.tab').forEach((t) => {
           t.classList.remove('active');
           t.removeAttribute('aria-current');
@@ -247,33 +241,12 @@
         document.getElementById('createOperationBtn').addEventListener('click', () => setActiveView('nuevo'));
         document.getElementById('refreshBtn').addEventListener('click', () => { state.generalMetrics[1].sub = `${Math.floor(Math.random() * 8) + 3} en la última hora`; renderMetrics(); });
         document.getElementById('openNotifications').addEventListener('click', () => setActiveView('avisos'));
-        document.getElementById('serviceForm').addEventListener('submit', (e) => {
-          e.preventDefault();
-          const n = document.getElementById('serviceName');
-          const a = document.getElementById('serviceArea');
-          state.services.unshift({ name: n.value.trim(), area: a.value });
-          renderServices();
-          n.value = ''; a.value = '';
-        });
-        document.getElementById('newSaleForm').addEventListener('submit', (e) => {
-          e.preventDefault();
-          const c = document.getElementById('saleClient');
-          const m = document.getElementById('saleAmount');
-          const v = els.saleSeller;
-          window.alert(`Venta guardada: ${c.value} - ${m.value} (${v.value})`);
-          c.value = ''; m.value = ''; v.value = '';
-          setActiveView('inicio');
-        });
+        document.getElementById('serviceForm').addEventListener('submit', (e) => { e.preventDefault(); const n = document.getElementById('serviceName'); const a = document.getElementById('serviceArea'); state.services.unshift({ name: n.value.trim(), area: a.value }); renderServices(); n.value = ''; a.value = ''; });
+        document.getElementById('newSaleForm').addEventListener('submit', (e) => { e.preventDefault(); const c = document.getElementById('saleClient'); const m = document.getElementById('saleAmount'); const v = els.saleSeller; window.alert(`Venta guardada: ${c.value} - ${m.value} (${v.value})`); c.value = ''; m.value = ''; v.value = ''; setActiveView('inicio'); });
         document.querySelectorAll('.tab').forEach((tab) => tab.addEventListener('click', () => setActiveView(tab.dataset.view)));
       }
 
-      renderMetrics();
-      renderTopSellers();
-      renderSellers();
-      renderSaleSellerOptions();
-      renderServices();
-      renderNews();
-      setupInteractions();
+      renderMetrics(); renderTopSellers(); renderSellers(); renderSaleSellerOptions(); renderServices(); renderNews(); setupInteractions();
     </script>
   </body>
 </html>
