@@ -8,17 +8,12 @@
     <style>
       :root {
         --bg: #081326;
-        --bg-soft: #102846;
         --card: rgba(255, 255, 255, 0.08);
         --line: rgba(138, 191, 255, 0.25);
         --text: #eaf3ff;
         --muted: #a9c3e5;
         --primary: #12b3ff;
-        --ok: #2dd4bf;
-        --warn: #f59e0b;
-        --danger: #f43f5e;
       }
-
       * { box-sizing: border-box; }
       html, body { margin: 0; padding: 0; }
       body {
@@ -36,13 +31,13 @@
       .brand h1 { margin: 0.12rem 0 0; font-size: 1.25rem; letter-spacing: 0.3px; }
       .icon-btn { width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 13px; background: var(--card); color: var(--text); }
 
-      .stack { display: grid; gap: 0.75rem; margin-top: 0.85rem; }
-      .card { border: 1px solid var(--line); background: var(--card); border-radius: 16px; backdrop-filter: blur(12px); box-shadow: 0 12px 26px rgba(2, 6, 20, 0.35); }
+      .view { display: none; }
+      .view.active { display: grid; gap: 0.75rem; margin-top: 0.85rem; }
 
+      .card { border: 1px solid var(--line); background: var(--card); border-radius: 16px; backdrop-filter: blur(12px); box-shadow: 0 12px 26px rgba(2, 6, 20, 0.35); }
       .hero { padding: 0.9rem; display: grid; gap: 0.75rem; }
       .hero h2 { margin: 0; font-size: 1.03rem; }
       .hero p { margin: 0; color: var(--muted); font-size: 0.88rem; }
-
       .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
       .btn { border: none; border-radius: 11px; min-height: 42px; font-weight: 650; }
       .btn-primary { background: linear-gradient(180deg, #35c3ff, var(--primary)); color: #032640; }
@@ -56,7 +51,6 @@
 
       .panel { padding: 0.85rem; }
       .panel h3 { margin: 0 0 0.55rem; font-size: 0.95rem; }
-
       .list { display: grid; gap: 0.5rem; }
       .item { border: 1px solid rgba(147, 196, 255, 0.2); background: rgba(255, 255, 255, 0.04); border-radius: 11px; padding: 0.6rem; }
       .row { display: flex; justify-content: space-between; gap: 0.45rem; align-items: center; }
@@ -77,15 +71,18 @@
         background: rgba(5, 16, 30, 0.84); backdrop-filter: blur(12px); padding: 0.4rem;
         display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.18rem;
       }
-      .tab { border: none; background: transparent; color: #9ec4ea; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; border-radius: 11px; padding: 0.32rem 0; font-size: 0.96rem; }
-      .tab span { font-size: 0.66rem; }
-      .tab.active { color: #eaffff; background: rgba(18, 179, 255, 0.24); }
+      .tab {
+        border: none; background: rgba(255, 255, 255, 0.95); color: #000;
+        display: flex; flex-direction: column; align-items: center; gap: 0.15rem;
+        border-radius: 11px; padding: 0.32rem 0; font-size: 0.96rem;
+      }
+      .tab-icon { width: 18px; height: 18px; display: inline-flex; }
+      .tab-icon svg { width: 100%; height: 100%; stroke: #000; fill: none; stroke-width: 1.8; }
+      .tab span { font-size: 0.66rem; color: #000; }
+      .tab.active { background: #ffffff; box-shadow: inset 0 0 0 2px #000; }
 
-      .desktop-note { display: none; }
       @media (min-width: 900px) {
-        .app { max-width: 1060px; padding-bottom: 2rem; }
-        .desktop-note { display: block; color: var(--muted); margin-top: 0.3rem; }
-        .layout { display: grid; grid-template-columns: 1.15fr 1fr; gap: 0.75rem; }
+        .app { max-width: 1060px; }
         .tabbar { position: static; transform: none; width: 100%; margin-top: 0.7rem; }
       }
     </style>
@@ -96,30 +93,32 @@
         <div class="brand">
           <small>MASTERSON SECURITY</small>
           <h1>Centro de Operaciones</h1>
-          <p class="desktop-note">Monitoreo de guardias, incidentes, rutas y respuesta táctica.</p>
         </div>
         <button class="icon-btn" id="notifBtn" aria-label="Notificaciones">🔔</button>
       </header>
 
-      <main class="stack" id="view-inicio">
-        <section class="card hero">
-          <h2>Estado general: Cobertura Activa</h2>
-          <p>24 zonas monitoreadas · 3 móviles en patrulla · 1 alerta de prioridad media.</p>
-          <div class="actions">
-            <button class="btn btn-primary" id="newIncidentQuick">Nuevo incidente</button>
-            <button class="btn btn-soft" id="refreshOps">Actualizar estado</button>
-          </div>
+      <main>
+        <section class="view active" id="view-inicio">
+          <section class="card hero">
+            <h2>Estado general: Cobertura Activa</h2>
+            <p>24 zonas monitoreadas · 3 móviles en patrulla · 1 alerta de prioridad media.</p>
+            <div class="actions">
+              <button class="btn btn-primary" id="newIncidentQuick">Nuevo incidente</button>
+              <button class="btn btn-soft" id="refreshOps">Actualizar estado</button>
+            </div>
+          </section>
+          <section class="grid" id="metrics"></section>
         </section>
 
-        <section class="grid" id="metrics"></section>
-
-        <div class="layout">
-          <section class="card panel" id="view-equipo">
+        <section class="view" id="view-equipo">
+          <section class="card panel">
             <h3>Equipo en servicio</h3>
             <div class="list" id="guards"></div>
           </section>
+        </section>
 
-          <section class="card panel" id="view-incidentes">
+        <section class="view" id="view-incidentes">
+          <section class="card panel">
             <h3>Registro rápido de incidente</h3>
             <form class="incident-form" id="incidentForm">
               <input class="field" id="incidentTitle" placeholder="Título del incidente" required />
@@ -133,25 +132,39 @@
               <button class="btn btn-primary" type="submit">Crear incidente</button>
             </form>
           </section>
-        </div>
-
-        <section class="card panel" id="view-rutas">
-          <h3>Rutas y móviles</h3>
-          <div class="list" id="routes"></div>
         </section>
 
-        <section class="card panel" id="view-alertas">
-          <h3>Alertas y novedades</h3>
-          <div class="list" id="alerts"></div>
+        <section class="view" id="view-rutas">
+          <section class="card panel">
+            <h3>Rutas y móviles</h3>
+            <div class="list" id="routes"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-alertas">
+          <section class="card panel">
+            <h3>Alertas y novedades</h3>
+            <div class="list" id="alerts"></div>
+          </section>
         </section>
       </main>
 
       <nav class="tabbar" aria-label="Navegación">
-        <button class="tab active" data-target="view-inicio">🏠<span>Inicio</span></button>
-        <button class="tab" data-target="view-equipo">🛡️<span>Equipo</span></button>
-        <button class="tab" data-target="view-incidentes">🚨<span>Incidente</span></button>
-        <button class="tab" data-target="view-rutas">📍<span>Rutas</span></button>
-        <button class="tab" data-target="view-alertas">🔔<span>Alertas</span></button>
+        <button class="tab active" data-target="view-inicio">
+          <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M3 11.5L12 4l9 7.5"/><path d="M6.5 10.5V20h11V10.5"/></svg></span><span>Inicio</span>
+        </button>
+        <button class="tab" data-target="view-equipo">
+          <span class="tab-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.8 18c.7-2.7 2.7-4 5.2-4s4.5 1.3 5.2 4"/><circle cx="17" cy="9" r="2.2"/><path d="M14.5 17.5c.6-1.7 1.9-2.7 3.8-2.9"/></svg></span><span>Equipo</span>
+        </button>
+        <button class="tab" data-target="view-incidentes">
+          <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span><span>Incidente</span>
+        </button>
+        <button class="tab" data-target="view-rutas">
+          <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 21s6-5.4 6-11a6 6 0 1 0-12 0c0 5.6 6 11 6 11Z"/><circle cx="12" cy="10" r="2.2"/></svg></span><span>Rutas</span>
+        </button>
+        <button class="tab" data-target="view-alertas">
+          <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M6.5 8a5.5 5.5 0 1 1 11 0c0 4.8 2 5.5 2 5.5h-15S6.5 12.8 6.5 8Z"/><path d="M10 17.5a2 2 0 0 0 4 0"/></svg></span><span>Alertas</span>
+        </button>
       </nav>
     </div>
 
@@ -199,32 +212,26 @@
         alertsEl.innerHTML = state.alerts.map((a) => `<article class="item"><div class="row"><b>${a.level}</b><span class="${chip(a.level)}">${a.level}</span></div><small>${a.m}</small></article>`).join('');
       }
 
-      function activateTab(btn) {
-        document.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
-        btn.classList.add('active');
+      function setView(targetId) {
+        document.querySelectorAll('.view').forEach((v) => v.classList.remove('active'));
+        document.getElementById(targetId)?.classList.add('active');
+        document.querySelectorAll('.tab').forEach((t) => {
+          t.classList.remove('active');
+          if (t.dataset.target === targetId) t.classList.add('active');
+        });
       }
 
       function setup() {
         document.querySelectorAll('.tab').forEach((tab) => {
-          tab.addEventListener('click', () => {
-            activateTab(tab);
-            const target = document.getElementById(tab.dataset.target);
-            target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          });
+          tab.addEventListener('click', () => setView(tab.dataset.target));
         });
 
-        document.getElementById('newIncidentQuick').addEventListener('click', () => {
-          document.getElementById('view-incidentes')?.scrollIntoView({ behavior: 'smooth' });
-        });
-
+        document.getElementById('newIncidentQuick').addEventListener('click', () => setView('view-incidentes'));
         document.getElementById('refreshOps').addEventListener('click', () => {
           state.metrics[1].v = String(Number(state.metrics[1].v) + 1);
           render();
         });
-
-        document.getElementById('notifBtn').addEventListener('click', () => {
-          document.getElementById('view-alertas')?.scrollIntoView({ behavior: 'smooth' });
-        });
+        document.getElementById('notifBtn').addEventListener('click', () => setView('view-alertas'));
 
         document.getElementById('incidentForm').addEventListener('submit', (e) => {
           e.preventDefault();
@@ -236,7 +243,7 @@
           priority.value = '';
           zone.value = '';
           render();
-          document.getElementById('view-alertas')?.scrollIntoView({ behavior: 'smooth' });
+          setView('view-alertas');
         });
       }
 
