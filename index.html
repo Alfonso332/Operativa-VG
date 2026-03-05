@@ -195,31 +195,31 @@
       </main>
 
       <nav class="mobile-tabbar" aria-label="Navegación inferior">
-        <button class="tab active" aria-current="page" data-target="homeSection">
+        <button class="tab active" aria-current="page" data-view="inicio">
           <span class="tab-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M3 11.5L12 4l9 7.5"/><path d="M6.5 10.5V20h11V10.5"/></svg>
           </span>
           <span>Inicio</span>
         </button>
-        <button class="tab" data-target="teamSection">
+        <button class="tab" data-view="equipo">
           <span class="tab-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.8 18c.7-2.7 2.7-4 5.2-4s4.5 1.3 5.2 4"/><circle cx="17" cy="9" r="2.2"/><path d="M14.5 17.5c.6-1.7 1.9-2.7 3.8-2.9"/></svg>
           </span>
           <span>Equipo</span>
         </button>
-        <button class="tab" data-target="homeSection" data-action="new-operation">
+        <button class="tab" data-view="nuevo">
           <span class="tab-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
           </span>
           <span>Nuevo</span>
         </button>
-        <button class="tab" data-target="servicesSection">
+        <button class="tab" data-view="servicios">
           <span class="tab-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M6 7.5h12"/><path d="M6 12h12"/><path d="M6 16.5h8"/><rect x="4" y="4" width="16" height="16" rx="2.5"/></svg>
           </span>
           <span>Servicios</span>
         </button>
-        <button class="tab" data-target="newsSection" data-action="open-news">
+        <button class="tab" data-view="avisos">
           <span class="tab-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M6.5 8a5.5 5.5 0 1 1 11 0c0 4.8 2 5.5 2 5.5h-15S6.5 12.8 6.5 8Z"/><path d="M10 17.5a2 2 0 0 0 4 0"/></svg>
           </span>
@@ -326,11 +326,36 @@
         tab.setAttribute('aria-current', 'page');
       }
 
-      function scrollToTarget(targetId) {
-        const target = document.getElementById(targetId);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+      function openViewWindow(view) {
+        const viewMap = {
+          inicio: {
+            title: 'Inicio',
+            body: '<h1>Inicio</h1><p>Resumen general de operación y ventas.</p>'
+          },
+          equipo: {
+            title: 'Equipo',
+            body: '<h1>Equipo de ventas</h1><p>Listado de vendedores y detalle de KPIs individuales.</p>'
+          },
+          nuevo: {
+            title: 'Nuevo',
+            body: '<h1>Nueva operación</h1><p>Desde aquí puedes crear una nueva operación comercial.</p>'
+          },
+          servicios: {
+            title: 'Servicios',
+            body: '<h1>Servicios</h1><p>Administración y alta de servicios comerciales.</p>'
+          },
+          avisos: {
+            title: 'Avisos',
+            body: '<h1>Avisos y novedades</h1><p>Centro de notificaciones y novedades del equipo.</p>'
+          }
+        };
+
+        const current = viewMap[view] || { title: 'Vista', body: '<h1>Vista</h1>' };
+        const win = window.open('', '_blank', 'noopener,noreferrer');
+        if (!win) return;
+
+        win.document.write(`<!doctype html><html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>${current.title}</title><style>body{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#0f172a;color:#e2e8f0;margin:0;padding:24px} .card{max-width:560px;background:#111c33;border:1px solid #334155;border-radius:16px;padding:20px} h1{margin:0 0 10px;font-size:1.3rem} p{margin:0;color:#a5b4cf;line-height:1.5}</style></head><body><article class="card">${current.body}</article></body></html>`);
+        win.document.close();
       }
 
       function setupInteractions() {
@@ -361,19 +386,7 @@
         document.querySelectorAll('.tab').forEach((tab) => {
           tab.addEventListener('click', () => {
             activateTab(tab);
-
-            const { target, action } = tab.dataset;
-            if (target) {
-              scrollToTarget(target);
-            }
-
-            if (action === 'new-operation') {
-              document.getElementById('createOperationBtn').click();
-            }
-
-            if (action === 'open-news') {
-              document.getElementById('openNotifications').click();
-            }
+            openViewWindow(tab.dataset.view);
           });
         });
       }
